@@ -10,10 +10,13 @@
         <RepositoryUrl>https://github.com/nextstarproject/NetFramework-cb</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageProjectUrl>https://github.com/nextstarproject/NetFramework-cb</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/nextstarproject/NetFramework-cb/blob/master/LICENSE</PackageLicenseUrl>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+      <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.24" />
     </ItemGroup>
 
 </Project>
