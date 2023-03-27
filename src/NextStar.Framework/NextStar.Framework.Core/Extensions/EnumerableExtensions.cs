@@ -4,7 +4,7 @@ public static class EnumerableExtensions
 {
     /// <summary>
     /// Concatenates the members of a constructed <see cref="IEnumerable{T}"/> collection of type System.String, using the specified separator between each member.
-    /// This is a shortcut for string.Join(...)
+    /// This is a shortcut for <see cref="string.Join(string?, IEnumerable{string?})"/>
     /// </summary>
     /// <param name="source">A collection that contains the strings to concatenate.</param>
     /// <param name="separator">The string to use as a separator. separator is included in the returned string only if values has more than one element.</param>

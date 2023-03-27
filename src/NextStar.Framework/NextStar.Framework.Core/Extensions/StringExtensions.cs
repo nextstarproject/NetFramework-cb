@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using NextStar.Framework.Core;
@@ -8,9 +9,12 @@ namespace System;
 public static class StringExtensions
 {
     /// <summary>
-    /// Indicates whether this string is null or an System.String.Empty string.
+    /// Indicates whether this string is null or an <see cref="System.String.Empty"/> string.
     /// </summary>
-    public static bool IsNullOrEmpty(this string? str)
+    /// <summary xml:lang="zh">
+    /// 指示此字符串是否为空或 <see cref="System.String.Empty"/> 字符串。
+    /// </summary>
+    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? str)
     {
         return string.IsNullOrEmpty(str);
     }
@@ -18,7 +22,10 @@ public static class StringExtensions
     /// <summary>
     /// Indicates whether this string is null, empty, or consists only of white-space characters.
     /// </summary>
-    public static bool IsNullOrWhiteSpace(this string? str)
+    /// <summary xml:lang="zh">
+    /// 指示此字符串是否为空，空，或仅由白空间字符组成。
+    /// </summary>
+    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? str)
     {
         return string.IsNullOrWhiteSpace(str);
     }
@@ -26,8 +33,11 @@ public static class StringExtensions
     /// <summary>
     /// Adds a char to end of given string if it does not ends with the char.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 在给定的字符串的末尾添加一个字符，如果它没有以该字符结束。
+    /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    public static string EnsureEndsWith(this string str, char c,
+    public static string EnsureEndsWith([NotNull] this string str, char c,
         StringComparison comparisonType = StringComparison.Ordinal)
     {
         return str.EndsWith(c.ToString(), comparisonType) ? str : str + c;
@@ -36,8 +46,11 @@ public static class StringExtensions
     /// <summary>
     /// Adds a char to beginning of given string if it does not starts with the char.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 在给定的字符串的开头添加一个字符，如果它不以该字符为开头。
+    /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    public static string EnsureStartsWith(this string str, char c,
+    public static string EnsureStartsWith([NotNull] this string str, char c,
         StringComparison comparisonType = StringComparison.Ordinal)
     {
         return str.StartsWith(c.ToString(), comparisonType) ? str : c + str;
@@ -46,9 +59,12 @@ public static class StringExtensions
     /// <summary>
     /// Gets a substring of a string from beginning of the string.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 从字符串的开头获取一个字符串的子串。
+    /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
-    public static string Left(this string str, int len)
+    public static string Left([NotNull] this string str, int len)
     {
         if (str.Length < len)
         {
@@ -61,9 +77,12 @@ public static class StringExtensions
     /// <summary>
     /// Gets a substring of a string from end of the string.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 从字符串的末端获取字符串的子串。
+    /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
-    public static string Right(this string str, int len)
+    public static string Right([NotNull] this string str, int len)
     {
         if (str.Length < len)
         {
@@ -76,8 +95,11 @@ public static class StringExtensions
     /// <summary>
     /// Converts line endings in the string to <see cref="Environment.NewLine"/>.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 将字符串中的行结尾转换为 <see cref="Environment.NewLine"/>。
+    /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    public static string NormalizeLineEndings(this string str)
+    public static string NormalizeLineEndings([NotNull] this string str)
     {
         return str.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", Environment.NewLine);
     }
@@ -85,10 +107,14 @@ public static class StringExtensions
     /// <summary>
     /// Gets index of nth occurrence of a char in a string.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 获取字符串中第n次出现的字符的索引。
+    /// </summary>
     /// <param name="str">source string to be searched</param>
     /// <param name="c">Char to search in <paramref name="str"/></param>
     /// <param name="n">Count of the occurrence</param>
-    public static int NthIndexOf(this string str, char c, int n)
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
+    public static int NthIndexOf([NotNull] this string str, char c, int n)
     {
         var count = 0;
         for (var i = 0; i < str.Length; i++)
@@ -110,10 +136,14 @@ public static class StringExtensions
     /// <summary>
     /// Removes first occurrence of the given postfixes from end of the given string.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 从给定的字符串的末尾删除第一个出现的后缀。
+    /// </summary>
     /// <param name="str">The string.</param>
     /// <param name="postFixes">one or more postfix.</param>
     /// <returns>Modified string or the same string if it has not any of given postfixes</returns>
-    public static string RemovePostFix(this string str, params string[]? postFixes)
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
+    public static string RemovePostFix([NotNull] this string str, params string[]? postFixes)
     {
         return str.RemovePostFix(StringComparison.Ordinal, postFixes);
     }
@@ -121,11 +151,15 @@ public static class StringExtensions
     /// <summary>
     /// Removes first occurrence of the given postfixes from end of the given string.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 从给定的字符串的末尾删除第一个出现的后缀。
+    /// </summary>
     /// <param name="str">The string.</param>
     /// <param name="comparisonType">String comparison type</param>
     /// <param name="postFixes">one or more postfix.</param>
     /// <returns>Modified string or the same string if it has not any of given postfixes</returns>
-    public static string RemovePostFix(this string str, StringComparison comparisonType, params string[]? postFixes)
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
+    public static string RemovePostFix([NotNull] this string str, StringComparison comparisonType, params string[]? postFixes)
     {
         if (str.IsNullOrEmpty())
         {
@@ -151,10 +185,14 @@ public static class StringExtensions
     /// <summary>
     /// Removes first occurrence of the given prefixes from beginning of the given string.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 从给定的字符串的开头删除第一个出现的前缀。
+    /// </summary>
     /// <param name="str">The string.</param>
     /// <param name="preFixes">one or more prefix.</param>
     /// <returns>Modified string or the same string if it has not any of given prefixes</returns>
-    public static string RemovePreFix(this string str, params string[]? preFixes)
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
+    public static string RemovePreFix([NotNull] this string str, params string[]? preFixes)
     {
         return str.RemovePreFix(StringComparison.Ordinal, preFixes);
     }
@@ -162,11 +200,15 @@ public static class StringExtensions
     /// <summary>
     /// Removes first occurrence of the given prefixes from beginning of the given string.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 从给定的字符串的开头删除第一个出现的前缀。
+    /// </summary>
     /// <param name="str">The string.</param>
     /// <param name="comparisonType">String comparison type</param>
     /// <param name="preFixes">one or more prefix.</param>
     /// <returns>Modified string or the same string if it has not any of given prefixes</returns>
-    public static string RemovePreFix(this string str, StringComparison comparisonType, params string[]? preFixes)
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
+    public static string RemovePreFix([NotNull] this string str, StringComparison comparisonType, params string[]? preFixes)
     {
         if (str.IsNullOrEmpty())
         {
@@ -192,6 +234,9 @@ public static class StringExtensions
     /// <summary>
     /// Replace first occurrence of the given search string from beginning of the given string.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 替换从给定字符串开始的第一次出现的搜索字符串。
+    /// </summary>
     /// <returns></returns>
     public static string ReplaceFirst(this string str, string search, string replace,
         StringComparison comparisonType = StringComparison.Ordinal)
@@ -206,7 +251,10 @@ public static class StringExtensions
     }
 
     /// <summary>
-    /// Uses string.Split method to split given string by given separator.
+    /// Uses <see cref="string.Split"/> method to split given string by given separator.
+    /// </summary>
+    /// <summary xml:lang="zh">
+    /// 使用 <see cref="string.Split"/> 方法，通过给定的分隔符分割给定的字符串。
     /// </summary>
     public static string[] Split(this string str, string separator)
     {
@@ -214,7 +262,10 @@ public static class StringExtensions
     }
 
     /// <summary>
-    /// Uses string.Split method to split given string by given separator.
+    /// Uses <see cref="string.Split"/> method to split given string by given separator.
+    /// </summary>
+    /// <summary xml:lang="zh">
+    /// 使用 <see cref="string.Split"/> 方法，通过给定的分隔符分割给定的字符串。
     /// </summary>
     public static string[] Split(this string str, string separator, StringSplitOptions options)
     {
@@ -222,7 +273,10 @@ public static class StringExtensions
     }
 
     /// <summary>
-    /// Uses string.Split method to split given string by <see cref="Environment.NewLine"/>.
+    /// Uses <see cref="string.Split"/> method to split given string by <see cref="Environment.NewLine"/>.
+    /// </summary>
+    /// <summary xml:lang="zh">
+    /// 使用 <see cref="string.Split"/> 方法，通过 <see cref="Environment.NewLine"/> 分割给定的字符串。
     /// </summary>
     public static string[] SplitToLines(this string str)
     {
@@ -230,7 +284,10 @@ public static class StringExtensions
     }
 
     /// <summary>
-    /// Uses string.Split method to split given string by <see cref="Environment.NewLine"/>.
+    /// Uses <see cref="string.Split"/> method to split given string by <see cref="Environment.NewLine"/>.
+    /// </summary>
+    /// <summary xml:lang="zh">
+    /// 使用 <see cref="string.Split"/> 方法，通过 <see cref="Environment.NewLine"/> 分割给定的字符串。
     /// </summary>
     public static string[] SplitToLines(this string str, StringSplitOptions options)
     {
@@ -239,6 +296,9 @@ public static class StringExtensions
 
     /// <summary>
     /// Converts PascalCase string to camelCase string.
+    /// </summary>
+    /// <summary xml:lang="zh">
+    /// 将 PascalCase 字符串转换为 camelCase 字符串。
     /// </summary>
     /// <param name="str">String to convert</param>
     /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
@@ -263,9 +323,12 @@ public static class StringExtensions
 
         return (useCurrentCulture ? char.ToLower(str[0]) : char.ToLowerInvariant(str[0])) + str.Substring(1);
     }
-    
+
     /// <summary>
     /// Converts camelCase string to PascalCase string.
+    /// </summary>
+    /// <summary xml:lang="zh">
+    /// 将 camelCase 字符串转换为 PascalCase 字符串。
     /// </summary>
     /// <param name="str">String to convert</param>
     /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
@@ -294,6 +357,9 @@ public static class StringExtensions
     /// <summary>
     /// Converts given PascalCase/camelCase string to sentence (by splitting words by space).
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 将给定的PascalCase/camelCase字符串转换为句子（通过空格拆分单词）。
+    /// </summary>
     /// <example>"ThisIsSampleSentence" is converted to "This is a sample sentence".</example>
     /// <param name="str">String to convert.</param>
     /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
@@ -312,6 +378,9 @@ public static class StringExtensions
     /// <summary>
     /// Converts given PascalCase/camelCase string to kebab-case.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 将给定的PascalCase/camelCase字符串转换为kebab-case。
+    /// </summary>
     /// <param name="str">String to convert.</param>
     /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
     public static string ToKebabCase(this string str, bool useCurrentCulture = false)
@@ -327,9 +396,12 @@ public static class StringExtensions
             ? Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + "-" + char.ToLower(m.Value[1]))
             : Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + "-" + char.ToLowerInvariant(m.Value[1]));
     }
-    
+
     /// <summary>
     /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
+    /// </summary>
+    /// <summary xml:lang="zh">
+    /// 如果超过最大长度，从字符串的开头获取字符串的子串。
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
     public static string Truncate(this string str, int maxLength)
@@ -340,27 +412,40 @@ public static class StringExtensions
     /// <summary>
     /// Gets a substring of a string from Ending of the string if it exceeds maximum length.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 如果一个字符串超过最大长度，则从该字符串的末尾获取一个子字符串。
+    /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
     public static string TruncateFromBeginning(this string str, int maxLength)
     {
         return str.Length <= maxLength ? str : str.Right(maxLength);
     }
-    
+
     /// <summary>
-    /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
-    /// It adds a "..." postfix to end of the string if it's truncated.
-    /// Returning string can not be longer than maxLength.
+    /// <para>Gets a substring of a string from beginning of the string if it exceeds maximum length.</para>
+    /// <para>It adds a "..." postfix to end of the string if it's truncated.</para>
+    /// <para>Returning string can not be longer than maxLength.</para>
+    /// </summary>
+    /// <summary xml:lang="zh">
+    /// <para>如果一个字符串超过了最大长度，就从字符串的开头获得一个子串。</para>
+    /// <para>如果字符串被截断，它会在字符串的末尾添加一个"... "后缀。</para>
+    /// <para>返回的字符串不能长于最大长度。</para>
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    public static string TruncateWithPostfix(this string str, int maxLength)
+    public static string TruncateWithPostfix([NotNull] this string str, int maxLength)
     {
         return TruncateWithPostfix(str, maxLength, StringConst.Ellipsis);
     }
 
     /// <summary>
-    /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
-    /// It adds given <paramref name="postfix"/> to end of the string if it's truncated.
-    /// Returning string can not be longer than maxLength.
+    /// <para>Gets a substring of a string from beginning of the string if it exceeds maximum length.</para>
+    /// <para>It adds given <paramref name="postfix"/> to end of the string if it's truncated.</para>
+    /// <para>Returning string can not be longer than maxLength.</para>
+    /// </summary>
+    /// <summary xml:lang="zh">
+    /// <para>如果一个字符串超过了最大长度，就从字符串的开头获得一个子串。</para>
+    /// <para>如果字符串被截断，它会在字符串的末尾添加一个 <paramref name="postfix"/> 后缀。</para>
+    /// <para>返回的字符串不能长于最大长度。</para>
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
     public static string TruncateWithPostfix(this string str, int maxLength, string postfix)
@@ -386,6 +471,9 @@ public static class StringExtensions
     /// <summary>
     /// Converts string to enum value.
     /// </summary>
+    /// <summary xml:lang="zh">
+    /// 将字符串转换为枚举值。
+    /// </summary>
     /// <typeparam name="T">Type of enum</typeparam>
     /// <param name="value">String value to convert</param>
     /// <returns>Returns enum object</returns>
@@ -397,6 +485,9 @@ public static class StringExtensions
 
     /// <summary>
     /// Converts string to enum value.
+    /// </summary>
+    /// <summary xml:lang="zh">
+    /// 将字符串转换为枚举值。
     /// </summary>
     /// <typeparam name="T">Type of enum</typeparam>
     /// <param name="value">String value to convert</param>
@@ -443,7 +534,7 @@ public static class StringExtensions
     /// <summary>
     /// Given a string to encrypt it to md5 hex
     /// </summary>
-    public static string ToMd5(this string str)
+    public static string ToMd5([NotNull] this string str)
     {
         using var md5 = MD5.Create();
         var inputBytes = Encoding.UTF8.GetBytes(str);
@@ -461,7 +552,7 @@ public static class StringExtensions
     /// <summary>
     /// Given a string to encrypt it to sha1 hex
     /// </summary>
-    public static string ToSha1(this string str)
+    public static string ToSha1([NotNull] this string str)
     {
         using var encrypt = SHA1.Create();
         var inputBytes = Encoding.UTF8.GetBytes(str);
@@ -479,7 +570,7 @@ public static class StringExtensions
     /// <summary>
     /// Given a string to encrypt it to sha256 hex
     /// </summary>
-    public static string ToSha256(this string str)
+    public static string ToSha256([NotNull] this string str)
     {
         using var encrypt = SHA256.Create();
         var inputBytes = Encoding.UTF8.GetBytes(str);
@@ -497,7 +588,7 @@ public static class StringExtensions
     /// <summary>
     /// Given a string to encrypt it to sha256 hex
     /// </summary>
-    public static string ToSha512(this string str)
+    public static string ToSha512([NotNull] this string str)
     {
         using var encrypt = SHA512.Create();
         var inputBytes = Encoding.UTF8.GetBytes(str);
@@ -515,7 +606,7 @@ public static class StringExtensions
     /// <summary>
     /// Given a string to encrypt it to md5 base64
     /// </summary>
-    public static string ToMd5Base64(this string str)
+    public static string ToMd5Base64([NotNull] this string str)
     {
         using var encrypt = MD5.Create();
         var inputBytes = Encoding.UTF8.GetBytes(str);
@@ -528,7 +619,7 @@ public static class StringExtensions
     /// <summary>
     /// Given a string to encrypt it to Sha1 hex
     /// </summary>
-    public static string ToSha1Base64(this string str)
+    public static string ToSha1Base64([NotNull] this string str)
     {
         using var encrypt = SHA1.Create();
         var inputBytes = Encoding.UTF8.GetBytes(str);
@@ -541,7 +632,7 @@ public static class StringExtensions
     /// <summary>
     /// Given a string to encrypt it to Sha256 hex
     /// </summary>
-    public static string ToSha256Base64(this string str)
+    public static string ToSha256Base64([NotNull] this string str)
     {
         using var encrypt = SHA256.Create();
         var inputBytes = Encoding.UTF8.GetBytes(str);
@@ -554,7 +645,7 @@ public static class StringExtensions
     /// <summary>
     /// Given a string to encrypt it to Sha512 hex
     /// </summary>
-    public static string ToSha512Base64(this string str)
+    public static string ToSha512Base64([NotNull] this string str)
     {
         using var encrypt = SHA512.Create();
         var inputBytes = Encoding.UTF8.GetBytes(str);
