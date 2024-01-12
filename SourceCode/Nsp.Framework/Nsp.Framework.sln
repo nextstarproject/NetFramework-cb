@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launch.Console", "Launch.Console\Launch.Console.csproj", "{C465D62C-FA3A-4CDE-988B-A82E556DAEC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nsp.Framework.Watermark", "Nsp.Framework.Watermark\Nsp.Framework.Watermark.csproj", "{50600697-69C6-46A0-821D-27E9F926572B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{C465D62C-FA3A-4CDE-988B-A82E556DAEC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C465D62C-FA3A-4CDE-988B-A82E556DAEC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C465D62C-FA3A-4CDE-988B-A82E556DAEC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50600697-69C6-46A0-821D-27E9F926572B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50600697-69C6-46A0-821D-27E9F926572B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50600697-69C6-46A0-821D-27E9F926572B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50600697-69C6-46A0-821D-27E9F926572B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
