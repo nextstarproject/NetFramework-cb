@@ -11,7 +11,26 @@ internal static class AppendWatermark
 {
     #region Not Full
 
-    internal static Bitmap Execute(Bitmap inputImage, Bitmap watermarkImage,
+    internal static void Execute(string inputImagePath, string outputImagePath, string watermarkPath,
+        WatermarkPosition position = WatermarkPosition.BottomRight, int positionX = 0, int positionY = 0)
+    {
+        using var inputImage = new Bitmap(inputImagePath);
+        using var watermarkImage = new Bitmap(watermarkPath);
+        var outputImage = Execute(inputImage, watermarkImage, position, positionX, positionY);
+        outputImage.Save(outputImagePath);
+    }
+
+    internal static void Execute(Stream inputStream, Stream outputStream, Stream watermarkStream,
+        WatermarkImageFormat imageFormat = WatermarkImageFormat.Png,
+        WatermarkPosition position = WatermarkPosition.BottomRight, int positionX = 0, int positionY = 0)
+    {
+        using var inputImage = new Bitmap(inputStream);
+        using var watermarkImage = new Bitmap(watermarkStream);
+        var outputImage = Execute(inputImage, watermarkImage, position, positionX, positionY);
+        outputImage.Save(outputStream, imageFormat == WatermarkImageFormat.Jpeg ? ImageFormat.Jpeg : ImageFormat.Png);
+    }
+
+    private static Bitmap Execute(Image inputImage, Image watermarkImage,
         WatermarkPosition position = WatermarkPosition.BottomRight, int positionX = 0, int positionY = 0)
     {
         var outputImage = new Bitmap(inputImage.Width, inputImage.Height);
@@ -32,16 +51,30 @@ internal static class AppendWatermark
         return outputImage;
     }
 
-    internal static void Execute(string inputImagePath, string outputImagePath, string watermarkPath,
-        WatermarkPosition position = WatermarkPosition.BottomRight, int positionX = 0, int positionY = 0)
-    {
-    }
-
     #endregion
 
     #region Full
 
-    internal static Bitmap ExecuteLoop(Bitmap inputImage, Bitmap watermarkImage, int horizontalSpacing = 10,
+    internal static void ExecuteLoop(string inputImagePath, string outputImagePath, string watermarkPath,
+        int horizontalSpacing = 10, int verticalSpacing = 10)
+    {
+        using var inputImage = new Bitmap(inputImagePath);
+        using var watermarkImage = new Bitmap(watermarkPath);
+        var outputImage = ExecuteLoop(inputImage, watermarkImage, horizontalSpacing, verticalSpacing);
+        outputImage.Save(outputImagePath);
+    }
+
+    internal static void ExecuteLoop(Stream inputStream, Stream outputStream, Stream watermarkStream,
+        WatermarkImageFormat imageFormat = WatermarkImageFormat.Png, int horizontalSpacing = 10,
+        int verticalSpacing = 10)
+    {
+        using var inputImage = new Bitmap(inputStream);
+        using var watermarkImage = new Bitmap(watermarkStream);
+        var outputImage = ExecuteLoop(inputImage, watermarkImage, horizontalSpacing, verticalSpacing);
+        outputImage.Save(outputStream, imageFormat == WatermarkImageFormat.Jpeg ? ImageFormat.Jpeg : ImageFormat.Png);
+    }
+
+    private static Bitmap ExecuteLoop(Image inputImage, Image watermarkImage, int horizontalSpacing = 10,
         int verticalSpacing = 10)
     {
         using var resultImage =
@@ -77,50 +110,6 @@ internal static class AppendWatermark
         }
 
         return croppedImage;
-    }
-
-    internal static void AddWatermarkLoop(string inputImagePath, string outputImagePath, string watermarkPath,
-        int horizontalSpacing = 10, int verticalSpacing = 10)
-    {
-        // Load the base image
-        using var baseImage = new Bitmap(inputImagePath);
-        // Load the watermark image
-        using var watermarkImage = new Bitmap(watermarkPath);
-        // Creating an image beyond saving
-        using var resultImage =
-            new Bitmap(baseImage.Width + watermarkImage.Width, baseImage.Height + watermarkImage.Height);
-        // Create a graphics object to draw on the base image
-        using (var graphics = Graphics.FromImage(resultImage))
-        {
-            // Draw the original image onto the resulting image to ensure that the contents of the original image are not overwritten
-            graphics.DrawImage(baseImage, 0, 0);
-
-            for (var y = 0; y < resultImage.Height; y += watermarkImage.Height + verticalSpacing)
-            {
-                for (var x = 0; x < resultImage.Width; x += watermarkImage.Width + horizontalSpacing)
-                {
-                    // Calculate the position of the watermark image
-                    var xPos = x;
-                    var yPos = y;
-
-                    // Draw the watermark image onto the original image
-                    graphics.DrawImage(watermarkImage, new Point(xPos, yPos));
-                }
-            }
-        }
-
-        // Create a new Bitmap to store the cropped image
-        var croppedImage = new Bitmap(baseImage.Width, baseImage.Height);
-
-        using (var graphics = Graphics.FromImage(croppedImage))
-        {
-            // Specify the area to crop and draw it onto the new Bitmap.
-            graphics.DrawImage(resultImage, new Rectangle(0, 0, baseImage.Width, baseImage.Height),
-                new Rectangle(0, 0, baseImage.Width, baseImage.Height), GraphicsUnit.Pixel);
-        }
-
-        // Save the result with the watermark
-        croppedImage.Save(outputImagePath);
     }
 
     #endregion
