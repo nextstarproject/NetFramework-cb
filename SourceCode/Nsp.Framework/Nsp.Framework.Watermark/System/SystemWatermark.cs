@@ -6,6 +6,10 @@ using System.Runtime.Versioning;
 
 namespace Nsp.Framework.Watermark.System;
 
+/// <summary>
+/// 使用 <see cref="System.Drawing"/> 来实现生成水印和添加水印
+/// <para>缺点：目前只有Windows可以安全支持，Linux需要安装<see href="https://github.com/mono/libgdiplus">libgdiplus</see></para>
+/// </summary>
 [SupportedOSPlatform("windows")]
 public static class SystemWatermark
 {
