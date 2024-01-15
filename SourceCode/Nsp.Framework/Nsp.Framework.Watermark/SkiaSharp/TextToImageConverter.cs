@@ -54,24 +54,25 @@ internal static class TextToImageConverter
     }
 
     internal static Stream ConvertToImageStream(string text, SKColor textColor, SKTypeface typeface, int textSize = 24,
+        SKEncodedImageFormat format = SKEncodedImageFormat.Png,
         float rotationAngle = 30.0f)
     {
         // 将 SKBitmap 保存到 MemoryStream 中
         using var bitmap = ConvertToBitmap(text, textColor, typeface, textSize, rotationAngle);
         var stream = new MemoryStream();
-        bitmap.Encode(stream, SKEncodedImageFormat.Png, 100); // 根据需要调整编码参数
-        stream.Seek(0, SeekOrigin.Begin);
+        bitmap.Encode(stream, format, 100); // 根据需要调整编码参数
         return stream;
     }
 
     internal static void SaveTextImage(string filePath, string text, SKColor textColor, SKTypeface typeface,
         int textSize = 24,
+        SKEncodedImageFormat format = SKEncodedImageFormat.Png,
         float rotationAngle = 30.0f)
     {
         using var bitmap = ConvertToBitmap(text, textColor, typeface, textSize, rotationAngle);
         using (SKImage skImage = SKImage.FromBitmap(bitmap))
         {
-            using (SKData data = skImage.Encode(SKEncodedImageFormat.Png, 100))
+            using (SKData data = skImage.Encode(format, 100))
             {
                 // 将 SKData 写入到文件
                 using (FileStream fileStream = File.OpenWrite(filePath))

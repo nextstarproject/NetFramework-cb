@@ -19,6 +19,7 @@ public static class SkiaSharpWatermark
     #region Text Watermark
 
     public static void GenerateWatermark([NotNull] string filePath, [NotNull] string text, int textSize = 24,
+        SKEncodedImageFormat format = SKEncodedImageFormat.Png,
         float rotationAngle = 30.0f,
         SKColor? color = null,
         SKTypeface? typeface = null)
@@ -29,7 +30,7 @@ public static class SkiaSharpWatermark
         var textTypeface = typeface ?? TextDefaultTypeface;
         var textColor = color ?? TextDefaultColor;
 
-        TextToImageConverter.SaveTextImage(filePath, text, textColor, textTypeface, textSize, rotationAngle);
+        TextToImageConverter.SaveTextImage(filePath, text, textColor, textTypeface, textSize, format, rotationAngle);
     }
 
     public static SKBitmap GenerateWatermark([NotNull] string text, int textSize = 24,
@@ -45,7 +46,12 @@ public static class SkiaSharpWatermark
         return TextToImageConverter.ConvertToBitmap(text, textColor, textTypeface, textSize, rotationAngle);
     }
 
+    /// <summary>
+    /// 此流会自动关闭，在外部使用时需要复制一份使用
+    /// </summary>
+    /// <returns></returns>
     public static Stream GenerateWatermarkStream([NotNull] string text, int textSize = 24,
+        SKEncodedImageFormat format = SKEncodedImageFormat.Png,
         float rotationAngle = 30.0f,
         SKColor? color = null,
         SKTypeface? typeface = null)
@@ -55,7 +61,8 @@ public static class SkiaSharpWatermark
         var textTypeface = typeface ?? TextDefaultTypeface;
         var textColor = color ?? TextDefaultColor;
 
-        return TextToImageConverter.ConvertToImageStream(text, textColor, textTypeface, textSize, rotationAngle);
+        return TextToImageConverter.ConvertToImageStream(text, textColor, textTypeface, textSize, format,
+            rotationAngle);
     }
 
     #endregion
