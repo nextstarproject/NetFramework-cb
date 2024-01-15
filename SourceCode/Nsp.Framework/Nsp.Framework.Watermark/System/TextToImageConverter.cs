@@ -59,6 +59,13 @@ internal static class TextToImageConverter
         return stream;
     }
 
+    internal static void SaveTextImage(string filePath, string text, Color textColor, Font font,
+        float rotationAngle = 30.0f)
+    {
+        using var bitmap = ConvertToBitmap(text, textColor, font, rotationAngle);
+        bitmap.Save(filePath);
+    }
+
     // 计算旋转后的矩形
     private static RectangleF GetRotatedRectangle(int width, int height, float angle)
     {
