@@ -31,9 +31,8 @@ public static class SystemWatermark
 
         var textFont = font ?? TextDefaultFont;
         var textColor = color ?? TextDefaultColor;
-
-        var image = TextToImageConverter.ConvertToBitmap(text, textColor, textFont, rotationAngle);
-        image.Save(filePath);
+        
+        TextToImageConverter.SaveTextImage(filePath, text, textColor, textFont, rotationAngle);
     }
 
     public static Bitmap GenerateWatermark([NotNull] string text, float rotationAngle = 30.0f, Color? color = null,
@@ -78,23 +77,23 @@ public static class SystemWatermark
         AppendWatermark.Execute(inputStream, outputStream, watermarkStream, imageFormat, position, positionX,
             positionY);
     }
-
+    
     #endregion
 
 
-    #region Append Loop
+    #region Append Full
 
-    public static void ExecuteLoop(string inputImagePath, string outputImagePath, string watermarkPath,
+    public static void ExecuteFull(string inputImagePath, string outputImagePath, string watermarkPath,
         int horizontalSpacing = 10, int verticalSpacing = 10)
     {
-        AppendWatermark.ExecuteLoop(inputImagePath, outputImagePath, watermarkPath, horizontalSpacing, verticalSpacing);
+        AppendWatermark.ExecuteFull(inputImagePath, outputImagePath, watermarkPath, horizontalSpacing, verticalSpacing);
     }
 
-    public static void ExecuteLoop(Stream inputStream, Stream outputStream, Stream watermarkStream,
+    public static void ExecuteFull(Stream inputStream, Stream outputStream, Stream watermarkStream,
         WatermarkImageFormat imageFormat = WatermarkImageFormat.Png, int horizontalSpacing = 10,
         int verticalSpacing = 10)
     {
-        AppendWatermark.ExecuteLoop(inputStream, outputStream, watermarkStream, imageFormat, horizontalSpacing, verticalSpacing);
+        AppendWatermark.ExecuteFull(inputStream, outputStream, watermarkStream, imageFormat, horizontalSpacing, verticalSpacing);
     }
 
     #endregion

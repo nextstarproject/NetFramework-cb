@@ -55,26 +55,26 @@ internal static class AppendWatermark
 
     #region Full
 
-    internal static void ExecuteLoop(string inputImagePath, string outputImagePath, string watermarkPath,
+    internal static void ExecuteFull(string inputImagePath, string outputImagePath, string watermarkPath,
         int horizontalSpacing = 10, int verticalSpacing = 10)
     {
         using var inputImage = new Bitmap(inputImagePath);
         using var watermarkImage = new Bitmap(watermarkPath);
-        var outputImage = ExecuteLoop(inputImage, watermarkImage, horizontalSpacing, verticalSpacing);
+        var outputImage = ExecuteFull(inputImage, watermarkImage, horizontalSpacing, verticalSpacing);
         outputImage.Save(outputImagePath);
     }
 
-    internal static void ExecuteLoop(Stream inputStream, Stream outputStream, Stream watermarkStream,
+    internal static void ExecuteFull(Stream inputStream, Stream outputStream, Stream watermarkStream,
         WatermarkImageFormat imageFormat = WatermarkImageFormat.Png, int horizontalSpacing = 10,
         int verticalSpacing = 10)
     {
         using var inputImage = new Bitmap(inputStream);
         using var watermarkImage = new Bitmap(watermarkStream);
-        var outputImage = ExecuteLoop(inputImage, watermarkImage, horizontalSpacing, verticalSpacing);
+        var outputImage = ExecuteFull(inputImage, watermarkImage, horizontalSpacing, verticalSpacing);
         outputImage.Save(outputStream, imageFormat == WatermarkImageFormat.Jpeg ? ImageFormat.Jpeg : ImageFormat.Png);
     }
 
-    private static Bitmap ExecuteLoop(Image inputImage, Image watermarkImage, int horizontalSpacing = 10,
+    private static Bitmap ExecuteFull(Image inputImage, Image watermarkImage, int horizontalSpacing = 10,
         int verticalSpacing = 10)
     {
         using var resultImage =

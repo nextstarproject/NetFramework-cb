@@ -11,4 +11,19 @@
       <ProjectReference Include="..\Nsp.Framework.Watermark\Nsp.Framework.Watermark.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\FZXingKJW-M.TTF" />
+      <Content Include="Resources\FZXingKJW-M.TTF">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\image.png" />
+      <Content Include="Resources\image.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\image2.png" />
+      <Content Include="Resources\image2.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>
