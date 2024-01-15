@@ -48,7 +48,7 @@ internal static class TextToImageConverter
         return rotatedBitmap;
     }
 
-    internal static MemoryStream ConvertToImageStream(string text, Color textColor, Font font,
+    internal static Stream ConvertToImageStream(string text, Color textColor, Font font,
         float rotationAngle = 30.0f)
     {
         // 将Bitmap保存到MemoryStream中
