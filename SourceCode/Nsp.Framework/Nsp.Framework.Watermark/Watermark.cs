@@ -12,7 +12,7 @@ public class Watermark
     /// <summary>
     /// 水印文字
     /// </summary>
-    public string Text { get; set; } = null!;
+    public string Text { get; set; } = "nsp.framework.watermark";
 
     /// <summary>
     /// 文字字体和样式
@@ -61,6 +61,11 @@ public class Watermark
     /// </summary>
     public int VerticalSpacing { get; set; } = 10;
 
+    public Watermark()
+    {
+        
+    }
+    
     public Watermark([NotNull] string text)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(text, nameof(text));
