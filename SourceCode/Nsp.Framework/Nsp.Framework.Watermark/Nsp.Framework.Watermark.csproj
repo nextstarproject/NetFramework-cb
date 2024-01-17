@@ -4,17 +4,36 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.1.0</Version>
+        <Version>1.0.0</Version>
         <Title>Nsp.Framework.Watermark</Title>
-        <Authors>NextStarProject</Authors>
+        <Authors>nextstarproject</Authors>
         <Description>This is watermark to image, support png,jpeg,gif,bmp,webp.</Description>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Copyright>nextstarproject</Copyright>
+        <PackageProjectUrl>https://github.com/nextstarproject/NetFramework-cb</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/nextstarproject/NetFramework-cb</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>watermark</PackageTags>
+        <PackageIcon>Resource\favicon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.5.0" />
-      <PackageReference Include="SkiaSharp" Version="2.88.7" />
-      <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
+        <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.5.0"/>
+        <PackageReference Include="SkiaSharp" Version="2.88.7"/>
+        <PackageReference Include="System.Drawing.Common" Version="8.0.1"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Resource\favicon.png">
+            <Pack>True</Pack>
+            <PackagePath>/</PackagePath>
+        </None>
+        <None Update="README.md">
+            <Pack>True</Pack>
+            <PackagePath>/</PackagePath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>
