@@ -10,7 +10,7 @@
         <Description>This is watermark to image, support png,jpeg,gif,bmp,webp.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Copyright>nextstarproject</Copyright>
-        <PackageProjectUrl>https://github.com/nextstarproject/NetFramework-cb</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/nextstarproject/NetFramework-cb/tree/master/SourceCode/Nsp.Framework/Nsp.Framework.Watermark</PackageProjectUrl>
         <RepositoryUrl>https://github.com/nextstarproject/NetFramework-cb</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>watermark</PackageTags>

@@ -149,12 +149,12 @@ var resource = "Resources";
 
 #### GIF Image
 
-![gif image single append watermark](Resource/chrome_kfa15G0UXN_single.gif)
+![gif image single append watermark](https://i.imgur.com/GlhdtkP.gif)
 
-![gif image full append watermark](Resource/chrome_kfa15G0UXN_full.gif)
+![gif image full append watermark](https://i.imgur.com/UQoqv8k.gif)
 
 #### Normal Image
 
-![png image single append watermark](Resource/output_single.png)
+![png image single append watermark](https://i.imgur.com/OVExhAL.png)
 
-![png image full append watermark](Resource/output_full.png)
+![png image full append watermark](https://i.imgur.com/YEfpKA7.png)
