@@ -68,15 +68,18 @@ var resource = "Resources";
     var subDir = "watermark_path/";
     Directory.CreateDirectory(subDir);
 
-    var watermark = new Watermark("origin from: spiritling.cn");
+    var watermark = new Watermark("nextstar.space")
+    {
+        TextSize = 24
+    };
     
-    var inputPath = Path.Combine(resource, "chrome_zEjXw3YDnT.gif");
+    var inputPath = Path.Combine(resource, "chrome_kfa15G0UXN.gif");
 
     var sw = new Stopwatch();
     sw.Start();
     // single gif
     watermark.Position = WatermarkPosition.BottomLeft;
-    var outputSinglePath = Path.Combine(subDir, "chrome_zEjXw3YDnT_single.gif");
+    var outputSinglePath = Path.Combine(subDir, "chrome_kfa15G0UXN_single.gif");
     watermark.Execute(inputPath, outputSinglePath);
     sw.Stop();
     Console.WriteLine(sw.Elapsed.ToString("c"));
@@ -84,14 +87,14 @@ var resource = "Resources";
     
     // full gif
     watermark.Position = WatermarkPosition.Full;
-    var outputFullPath = Path.Combine(subDir, "chrome_zEjXw3YDnT_full.gif");
+    var outputFullPath = Path.Combine(subDir, "chrome_kfa15G0UXN_full.gif");
     watermark.Execute(inputPath, outputFullPath);
     sw.Stop();
     Console.WriteLine(sw.Elapsed.ToString("c"));
     sw.Restart();
     
     
-    var inputPath2 = Path.Combine(resource, "image2.png");
+    var inputPath2 = Path.Combine(resource, "image.png");
 
     // single png
     watermark.Position = WatermarkPosition.BottomLeft;
@@ -114,9 +117,9 @@ var resource = "Resources";
     var subDir = "watermark_stream/";
     Directory.CreateDirectory(subDir);
 
-    var watermark = new Watermark();
+    var watermark = new Watermark("nextstar.space");
 
-    var inputPath = Path.Combine(resource, "chrome_zEjXw3YDnT.gif");
+    var inputPath = Path.Combine(resource, "chrome_kfa15G0UXN.gif");
 
 
     var sw = new Stopwatch();
@@ -125,7 +128,7 @@ var resource = "Resources";
     using (var inputStream = File.OpenRead(inputPath))
     {
         watermark.Position = WatermarkPosition.BottomLeft;
-        var outputSinglePath = Path.Combine(subDir, "chrome_zEjXw3YDnT_single.gif");
+        var outputSinglePath = Path.Combine(subDir, "chrome_kfa15G0UXN_single.gif");
         inputStream.Seek(0, SeekOrigin.Begin);
         var outputSingleStream = watermark.Execute(inputStream, WatermarkImageFormat.Gif);
         using (var outputFile = File.Create(outputSinglePath))
@@ -142,7 +145,7 @@ var resource = "Resources";
     using (var inputStream = File.OpenRead(inputPath))
     {
         watermark.Position = WatermarkPosition.Full;
-        var outputFullPath = Path.Combine(subDir, "chrome_zEjXw3YDnT_full.gif");
+        var outputFullPath = Path.Combine(subDir, "chrome_kfa15G0UXN_full.gif");
         inputStream.Seek(0, SeekOrigin.Begin);
         var outputFullStream = watermark.Execute(inputStream, WatermarkImageFormat.Gif);
         using (var outputFile = File.Create(outputFullPath))
@@ -156,7 +159,7 @@ var resource = "Resources";
     sw.Restart();
 
 
-    var inputPath2 = Path.Combine(resource, "image2.png");
+    var inputPath2 = Path.Combine(resource, "image.png");
 
     // single png
     using (var inputStream = File.OpenRead(inputPath2))
