@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Nsp.Framework.Watermark\Nsp.Framework.Watermark.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\FZXingKJW-M.TTF" />
+      <Content Include="Resources\FZXingKJW-M.TTF">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\image.png" />
+      <Content Include="Resources\image.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\image2.png" />
+      <Content Include="Resources\image2.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\chrome_zEjXw3YDnT.gif" />
+      <Content Include="Resources\chrome_zEjXw3YDnT.gif">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+</Project>
