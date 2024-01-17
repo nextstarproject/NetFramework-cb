@@ -29,7 +29,7 @@ public class Watermark
     /// <summary>
     /// 文字大小
     /// </summary>
-    public int TextSize { get; set; } = 24;
+    public int TextSize { get; set; } = 16;
 
     /// <summary>
     /// 文字旋转角度
