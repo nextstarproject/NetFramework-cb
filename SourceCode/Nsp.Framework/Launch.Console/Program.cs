@@ -64,8 +64,8 @@ var resource = "Resources";
     // });
 }
 {
-    Console.WriteLine("watermark");
-    var subDir = "watermark/";
+    Console.WriteLine("watermark path");
+    var subDir = "watermark_path/";
     Directory.CreateDirectory(subDir);
 
     var watermark = new Watermark("origin from: spiritling.cn");

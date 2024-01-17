@@ -18,7 +18,7 @@ public class Watermark
     /// 文字字体和样式
     /// </summary>
     public SKTypeface TextTypeface { get; set; } =
-        SKTypeface.FromFamilyName("Courier New", SKFontStyleWeight.Normal, SKFontStyleWidth.Normal,
+        SKTypeface.FromFamilyName("JetBrains Mono Medium", SKFontStyleWeight.Normal, SKFontStyleWidth.Normal,
             SKFontStyleSlant.Upright);
 
     /// <summary>
