@@ -10,7 +10,10 @@ var resource = "Resources";
     var subDir = "watermark_path/";
     Directory.CreateDirectory(subDir);
 
-    var watermark = new Watermark("origin from: spiritling.cn");
+    var watermark = new Watermark("nextstar.space")
+    {
+        TextSize = 24
+    };
     
     var inputPath = Path.Combine(resource, "chrome_zEjXw3YDnT.gif");
 
@@ -141,3 +144,17 @@ var resource = "Resources";
     sw.Restart();
 }
 ```
+
+### Result
+
+#### GIF Image
+
+![gif image single append watermark](Resource/chrome_kfa15G0UXN_single.gif)
+
+![gif image full append watermark](Resource/chrome_kfa15G0UXN_full.gif)
+
+#### Normal Image
+
+![png image single append watermark](Resource/output_single.png)
+
+![png image full append watermark](Resource/output_full.png)

@@ -25,7 +25,8 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <None Remove="Resources\chrome_zEjXw3YDnT.gif" />
-      <Content Include="Resources\chrome_zEjXw3YDnT.gif">
+      <None Remove="Resources\chrome_kfa15G0UXN.gif" />
+      <Content Include="Resources\chrome_kfa15G0UXN.gif">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
