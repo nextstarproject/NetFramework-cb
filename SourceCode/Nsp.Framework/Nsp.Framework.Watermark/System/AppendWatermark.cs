@@ -3,6 +3,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Runtime.Versioning;
+using Nsp.Framework.Watermark.Utils;
 
 namespace Nsp.Framework.Watermark.System;
 

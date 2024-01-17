@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using Nsp.Framework.Watermark.Utils;
 using SkiaSharp;
 
 namespace Nsp.Framework.Watermark.SkiaSharp;
@@ -72,15 +73,19 @@ public static class SkiaSharpWatermark
     #region Append Singel
 
     public static void Execute(string inputImagePath, string outputImagePath, string watermarkPath,
-        WatermarkPosition position = WatermarkPosition.BottomRight, int positionX = 0, int positionY = 0)
+        WatermarkPosition position = WatermarkPosition.BottomRight,
+        SKEncodedImageFormat? format = null,
+        int positionX = 0, int positionY = 0)
     {
-        AppendWatermark.Execute(inputImagePath, outputImagePath, watermarkPath, position, positionX, positionY);
+        AppendWatermark.Execute(inputImagePath, outputImagePath, watermarkPath, position, format, positionX, positionY);
     }
 
     public static void Execute(Stream inputStream, Stream outputStream, Stream watermarkStream,
-        WatermarkPosition position = WatermarkPosition.BottomRight, int positionX = 0, int positionY = 0)
+        WatermarkPosition position = WatermarkPosition.BottomRight,
+        SKEncodedImageFormat? format = null,
+        int positionX = 0, int positionY = 0)
     {
-        AppendWatermark.Execute(inputStream, outputStream, watermarkStream, position, positionX,
+        AppendWatermark.Execute(inputStream, outputStream, watermarkStream, position, format, positionX,
             positionY);
     }
 
@@ -90,20 +95,40 @@ public static class SkiaSharpWatermark
     #region Append Full
 
     public static void ExecuteFull(string inputImagePath, string outputImagePath, string watermarkPath,
+        SKEncodedImageFormat? format = null,
         int horizontalSpacing = 10, int verticalSpacing = 10)
     {
-        AppendWatermark.ExecuteFull(inputImagePath, outputImagePath, watermarkPath, horizontalSpacing, verticalSpacing);
+        AppendWatermark.ExecuteFull(inputImagePath, outputImagePath, watermarkPath, format, horizontalSpacing,
+            verticalSpacing);
     }
 
     public static void ExecuteFull(Stream inputStream, Stream outputStream, Stream watermarkStream,
+        SKEncodedImageFormat? format = null,
         int horizontalSpacing = 10,
         int verticalSpacing = 10)
     {
-        AppendWatermark.ExecuteFull(inputStream, outputStream, watermarkStream, horizontalSpacing,
+        AppendWatermark.ExecuteFull(inputStream, outputStream, watermarkStream, format, horizontalSpacing,
             verticalSpacing);
     }
 
     #endregion
 
     #endregion
+
+    public static SKEncodedImageFormat? GetEncodedFormat(WatermarkImageFormat format)
+    {
+        switch (format)
+        {
+            case WatermarkImageFormat.Png:
+                return SKEncodedImageFormat.Png;
+            case WatermarkImageFormat.Jpeg:
+                return SKEncodedImageFormat.Jpeg;
+            case WatermarkImageFormat.Webp:
+                return SKEncodedImageFormat.Webp;
+            case WatermarkImageFormat.Bmp:
+                return SKEncodedImageFormat.Bmp;
+            default:
+                return null;
+        }
+    }
 }

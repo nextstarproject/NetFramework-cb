@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using Nsp.Framework.Watermark.Utils;
+using SkiaSharp;
 
 namespace Nsp.Framework.Watermark.SkiaSharp;
 
@@ -7,17 +8,21 @@ internal static class AppendWatermark
     #region Not Full
 
     internal static void Execute(string inputImagePath, string outputImagePath, string watermarkPath,
-        WatermarkPosition position = WatermarkPosition.BottomRight, int positionX = 0, int positionY = 0)
+        WatermarkPosition position = WatermarkPosition.BottomRight,
+        SKEncodedImageFormat? format = null,
+        int positionX = 0, int positionY = 0)
     {
         using var inputStream = File.OpenRead(inputImagePath);
         using var outputStream = File.Create(outputImagePath);
         using var watermarkStream = File.OpenRead(watermarkPath);
 
-        Execute(inputStream, outputStream, watermarkStream, position, positionX, positionY);
+        Execute(inputStream, outputStream, watermarkStream, position, format, positionX, positionY);
     }
 
     internal static void Execute(Stream inputStream, Stream outputStream, Stream watermarkStream,
-        WatermarkPosition position = WatermarkPosition.BottomRight, int positionX = 0, int positionY = 0)
+        WatermarkPosition position = WatermarkPosition.BottomRight,
+        SKEncodedImageFormat? format = null,
+        int positionX = 0, int positionY = 0)
     {
         using var inputBitmap = SKBitmap.Decode(inputStream);
         using var watermarkBitmap = SKBitmap.Decode(watermarkStream);
@@ -25,7 +30,10 @@ internal static class AppendWatermark
         var outputBitmap = Execute(inputBitmap, watermarkBitmap, position, positionX, positionY);
 
         using var image = SKImage.FromBitmap(outputBitmap);
-        using var data = image.Encode();
+        using var data = format.HasValue
+            ? image.Encode(format.Value, 100)
+            : image.Encode();
+        ;
         data.SaveTo(outputStream);
     }
 
@@ -51,16 +59,18 @@ internal static class AppendWatermark
     #region Full
 
     internal static void ExecuteFull(string inputImagePath, string outputImagePath, string watermarkPath,
+        SKEncodedImageFormat? format = null,
         int horizontalSpacing = 10, int verticalSpacing = 10)
     {
         using var inputStream = File.OpenRead(inputImagePath);
         using var outputStream = File.Create(outputImagePath);
         using var watermarkStream = File.OpenRead(watermarkPath);
 
-        ExecuteFull(inputStream, outputStream, watermarkStream, horizontalSpacing, verticalSpacing);
+        ExecuteFull(inputStream, outputStream, watermarkStream, format, horizontalSpacing, verticalSpacing);
     }
 
     internal static void ExecuteFull(Stream inputStream, Stream outputStream, Stream watermarkStream,
+        SKEncodedImageFormat? format = null,
         int horizontalSpacing = 10, int verticalSpacing = 10)
     {
         using var inputBitmap = SKBitmap.Decode(inputStream);
@@ -68,7 +78,10 @@ internal static class AppendWatermark
         var outputBitmap = ExecuteFull(inputBitmap, watermarkBitmap, horizontalSpacing, verticalSpacing);
 
         using var image = SKImage.FromBitmap(outputBitmap);
-        using var data = image.Encode(SKEncodedImageFormat.Png, 100); // You can adjust the format and quality as needed
+        using var
+            data = format.HasValue
+                ? image.Encode(format.Value, 100)
+                : image.Encode(); // You can adjust the format and quality as needed
         data.SaveTo(outputStream);
     }
 

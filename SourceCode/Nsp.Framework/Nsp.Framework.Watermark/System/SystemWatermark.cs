@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Runtime.Versioning;
+using Nsp.Framework.Watermark.Utils;
 
 namespace Nsp.Framework.Watermark.System;
 
@@ -10,6 +11,7 @@ namespace Nsp.Framework.Watermark.System;
 /// 使用 <see cref="System.Drawing"/> 来实现生成水印和添加水印
 /// <para>缺点：目前只有Windows可以安全支持，Linux需要安装<see href="https://github.com/mono/libgdiplus">libgdiplus</see></para>
 /// </summary>
+[Obsolete("Please use SkiaSharpWatermark")]
 [SupportedOSPlatform("windows")]
 public static class SystemWatermark
 {

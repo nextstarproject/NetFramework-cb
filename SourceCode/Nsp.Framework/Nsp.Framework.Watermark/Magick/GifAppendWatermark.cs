@@ -4,7 +4,7 @@ namespace Nsp.Framework.Watermark.Magick;
 
 public static class GifAppendWatermark
 {
-    public static void Execute(Stream inputStream, string outputPath, Stream watermarkStream,
+    public static void Execute(Stream inputStream, Stream outputStream, Stream watermarkStream,
         Func<Stream, Stream, Stream> singleWatermarkFunc)
     {
         using (var collection2 = new MagickImageCollection())
@@ -35,7 +35,7 @@ public static class GifAppendWatermark
             collection2.Optimize();
 
             // 保存合并后的GIF文件
-            collection2.Write(outputPath);
+            collection2.Write(outputStream, MagickFormat.Gif);
         }
     }
 
@@ -48,9 +48,9 @@ public static class GifAppendWatermark
         using var watermarkFile = File.OpenRead(watermarkPath);
         using var watermarkStream = new MemoryStream();
         watermarkFile.CopyTo(watermarkStream);
-        using var outputStream = new MemoryStream();
         inputStream.Seek(0, SeekOrigin.Begin);
         watermarkStream.Seek(0, SeekOrigin.Begin);
-        Execute(inputStream, outputPath, watermarkStream, singleWatermarkFunc);
+        using var outputStream = File.Create(outputPath);
+        Execute(inputStream, outputStream, watermarkStream, singleWatermarkFunc);
     }
 }
