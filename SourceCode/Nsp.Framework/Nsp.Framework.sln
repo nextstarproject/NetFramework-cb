@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launch.Console", "Launch.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nsp.Framework.Watermark", "Nsp.Framework.Watermark\Nsp.Framework.Watermark.csproj", "{50600697-69C6-46A0-821D-27E9F926572B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nsp.Framework.Encrypt", "Nsp.Framework.Encrypt\Nsp.Framework.Encrypt.csproj", "{FA414385-03D4-415C-9DAC-4D3BFE229F08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{50600697-69C6-46A0-821D-27E9F926572B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50600697-69C6-46A0-821D-27E9F926572B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50600697-69C6-46A0-821D-27E9F926572B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA414385-03D4-415C-9DAC-4D3BFE229F08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA414385-03D4-415C-9DAC-4D3BFE229F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA414385-03D4-415C-9DAC-4D3BFE229F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA414385-03D4-415C-9DAC-4D3BFE229F08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
