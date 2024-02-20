@@ -2,4 +2,4 @@
 using Launch.WatermarkTest;
 
 //WatermarkTest.Main();
-EncryptTest.Main();
+EncryptTest.RsaTest();

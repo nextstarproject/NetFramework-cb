@@ -28,12 +28,12 @@ public class ECDsaProviderTest
     [TestMethod]
     public void ImportNewKey()
     {
-        var publicKey = _firstEcDsaProvider.GetBase64PublicKey();
-        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey();
-        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512))
+        var publicKey = _firstEcDsaProvider.GetBase64PublicKey(true);
+        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey(true);
+        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512,true))
         {
-            var publicKey2 = ecdsa2.GetBase64PublicKey();
-            var privateKey2 = ecdsa2.GetBase64PrivateKey();
+            var publicKey2 = ecdsa2.GetBase64PublicKey(true);
+            var privateKey2 = ecdsa2.GetBase64PrivateKey(true);
             Assert.AreEqual(publicKey, publicKey2);
             Assert.AreEqual(privateKey, privateKey2);
             var x509Cer2 = ecdsa2.ExportX509Certificate2();
@@ -47,13 +47,13 @@ public class ECDsaProviderTest
     [TestMethod]
     public void ImportSignAndVerify()
     {
-        var publicKey = _firstEcDsaProvider.GetBase64PublicKey();
-        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey();
+        var publicKey = _firstEcDsaProvider.GetBase64PublicKey(true);
+        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey(true);
         var signData = _firstEcDsaProvider.SignData("Hello Word");
-        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512))
+        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512,true))
         {
-            var publicKey2 = ecdsa2.GetBase64PublicKey();
-            var privateKey2 = ecdsa2.GetBase64PrivateKey();
+            var publicKey2 = ecdsa2.GetBase64PublicKey(true);
+            var privateKey2 = ecdsa2.GetBase64PrivateKey(true);
             Assert.AreEqual(publicKey, publicKey2);
             Assert.AreEqual(privateKey, privateKey2);
             var x509Cer2 = ecdsa2.ExportX509Certificate2();
@@ -75,12 +75,12 @@ public class ECDsaProviderTest
     [TestMethod]
     public void NoParametersImportExport()
     {
-        var publicKey = _firstEcDsaProvider.GetBase64PublicKey(false);
-        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey(false);
-        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512, false))
+        var publicKey = _firstEcDsaProvider.GetBase64PublicKey();
+        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey();
+        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512))
         {
-            var publicKey2 = ecdsa2.GetBase64PublicKey(false);
-            var privateKey2 = ecdsa2.GetBase64PrivateKey(false);
+            var publicKey2 = ecdsa2.GetBase64PublicKey();
+            var privateKey2 = ecdsa2.GetBase64PrivateKey();
             Assert.AreEqual(publicKey, publicKey2);
             Assert.AreEqual(privateKey, privateKey2);
         }
@@ -92,13 +92,13 @@ public class ECDsaProviderTest
     [TestMethod]
     public void NoParametersImportSignAndVerify()
     {
-        var publicKey = _firstEcDsaProvider.GetBase64PublicKey(false);
-        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey(false);
+        var publicKey = _firstEcDsaProvider.GetBase64PublicKey();
+        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey();
         var signData = _firstEcDsaProvider.SignData("Hello Word");
-        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512,false))
+        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512))
         {
-            var publicKey2 = ecdsa2.GetBase64PublicKey(false);
-            var privateKey2 = ecdsa2.GetBase64PrivateKey(false);
+            var publicKey2 = ecdsa2.GetBase64PublicKey();
+            var privateKey2 = ecdsa2.GetBase64PrivateKey();
             Assert.AreEqual(publicKey, publicKey2);
             Assert.AreEqual(privateKey, privateKey2);
             var aaa2 = ecdsa2.SignData("Hello Word");

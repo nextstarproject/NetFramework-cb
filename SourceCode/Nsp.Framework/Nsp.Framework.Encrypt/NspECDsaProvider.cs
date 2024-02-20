@@ -28,7 +28,7 @@ public class NspECDsaProvider : IDisposable
     }
 
     public NspECDsaProvider(string base64PrivateKey, string base64PublicKey, SecurityAlgorithms algorithms,
-        bool isParameters = true)
+        bool isParameters = false)
     {
         // 解码Base64字符串为字节数组
         var publicKeyBytes = Convert.FromBase64String(base64PublicKey);
@@ -47,18 +47,12 @@ public class NspECDsaProvider : IDisposable
                 Curve = ECCurve.NamedCurves.nistP256
             };
 
-            switch (algorithms)
+            ecParameters.Curve = algorithms switch
             {
-                case SecurityAlgorithms.SHA384:
-                    ecParameters.Curve = ECCurve.NamedCurves.nistP384;
-                    break;
-                case SecurityAlgorithms.SHA512:
-                    ecParameters.Curve = ECCurve.NamedCurves.nistP521;
-                    break;
-                default:
-                    ecParameters.Curve = ECCurve.NamedCurves.nistP256;
-                    break;
-            }
+                SecurityAlgorithms.SHA384 => ECCurve.NamedCurves.nistP384,
+                SecurityAlgorithms.SHA512 => ECCurve.NamedCurves.nistP521,
+                _ => ECCurve.NamedCurves.nistP256
+            };
 
             var ecdsa = ECDsa.Create();
             ecdsa.ImportParameters(ecParameters);
@@ -83,7 +77,7 @@ public class NspECDsaProvider : IDisposable
         return _ecDsa.ExportParameters(true);
     }
 
-    public string GetBase64PrivateKey(bool isParameters = true)
+    public string GetBase64PrivateKey(bool isParameters = false)
     {
         if (isParameters)
         {
@@ -107,7 +101,7 @@ public class NspECDsaProvider : IDisposable
         throw new ArgumentNullException(nameof(_ecDsa),"_ecDsa and _ecDsaPrivate is null");
     }
 
-    public string GetBase64PublicKey(bool isParameters = true)
+    public string GetBase64PublicKey(bool isParameters = false)
     {
         if (isParameters)
         {
@@ -177,8 +171,9 @@ public class NspECDsaProvider : IDisposable
     /// </summary>
     /// <param name="notBefore">不设置默认现在</param>
     /// <param name="notAfter">不设置默认一年</param>
+    /// <param name="name">设置CN名称{name}ECDsaCertificate</param>
     /// <returns></returns>
-    public X509Certificate2 ExportX509Certificate2(DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null)
+    public X509Certificate2 ExportX509Certificate2(DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null, string name = "NextStar")
     {
         ArgumentNullException.ThrowIfNull(_ecDsa);
         notBefore ??= DateTimeOffset.Now;
@@ -187,7 +182,7 @@ public class NspECDsaProvider : IDisposable
 
         // 创建 X.509 证书请求
         var certificateRequest = new CertificateRequest(
-            new X500DistinguishedName("CN=MyECDsaCertificate"),
+            new X500DistinguishedName($"CN={name}ECDsaCertificate"),
             _ecDsa,
             HashAlgorithmName.SHA256
         );
@@ -203,6 +198,8 @@ public class NspECDsaProvider : IDisposable
     public void Dispose()
     {
         _ecDsa?.Dispose();
+        _ecDsaPublic?.Dispose();
+        _ecDsaPrivate?.Dispose();
     }
 
     #region Private Method
