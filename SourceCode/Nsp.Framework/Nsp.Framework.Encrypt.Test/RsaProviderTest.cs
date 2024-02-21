@@ -17,8 +17,9 @@ public class RsaProviderTest
         var publicKey = _firstRsaProvider.GetBase64PublicKey();
         var privateKey = _firstRsaProvider.GetBase64PrivateKey();
         var xmlKey = _firstRsaProvider.ExportXmlPublicAndPrivate();
-        Console.WriteLine(publicKey);
-        Console.WriteLine(privateKey);
+        Assert.IsNotNull(publicKey);
+        Assert.IsNotNull(privateKey);
+        Assert.IsNotNull(xmlKey);
         var x509Cer1 = _firstRsaProvider.ExportX509Certificate2();
         Assert.IsNotNull(x509Cer1);
         

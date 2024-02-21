@@ -4,6 +4,50 @@ namespace Launch.EncryptTest;
 
 public class EncryptTest
 {
+    public static void RsaPssTest()
+    {
+        using (var rsa = new NspRsaPssProvider())
+        {
+            var publicKey = rsa.GetBase64PublicKey();
+            var privateKey = rsa.GetBase64PrivateKey();
+            var xmlKey = rsa.ExportXmlPublicAndPrivate();
+            Console.WriteLine(publicKey);
+            Console.WriteLine(privateKey);
+            var x509Cer1 = rsa.ExportX509Certificate2();
+            var aaa = rsa.SignData("Hello Word");
+            Console.WriteLine(aaa);
+            var bbb = rsa.VerifyData("Hello Word", aaa);
+            Console.WriteLine(bbb);
+            
+            using (var rsa2 = new NspRsaPssProvider(privateKey, publicKey))
+            {
+                var publicKey2 = rsa2.GetBase64PublicKey();
+                var privateKey2 = rsa2.GetBase64PrivateKey();
+                Console.WriteLine(publicKey2);
+                Console.WriteLine(privateKey2);
+                var aaa2 = rsa2.SignData("Hello Word");
+                Console.WriteLine(aaa2);
+                var bbb2 = rsa2.VerifyData("Hello Word", aaa2);
+                var bbb3 = rsa2.VerifyData("Hello Word", aaa);
+                Console.WriteLine(bbb2);
+                Console.WriteLine(bbb3);
+            }
+            using (var rsa3 = new NspRsaPssProvider(xmlKey))
+            {
+                var publicKey2 = rsa3.GetBase64PublicKey();
+                var privateKey2 = rsa3.GetBase64PrivateKey();
+                Console.WriteLine(publicKey2);
+                Console.WriteLine(privateKey2);
+                var x509Cer2 = rsa.ExportX509Certificate2();
+                var aaa2 = rsa3.SignData("Hello Word");
+                Console.WriteLine(aaa2);
+                var bbb2 = rsa3.VerifyData("Hello Word", aaa2);
+                var bbb3 = rsa3.VerifyData("Hello Word", aaa);
+                Console.WriteLine(bbb2);
+                Console.WriteLine(bbb3);
+            }
+        }
+    }
     public static void RsaTest()
     {
         using (var rsa = new NspRsaProvider())
