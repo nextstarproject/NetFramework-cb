@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace Nsp.Framework.Encrypt;
+namespace Nsp.Framework.Cryptography;
 
 /// <summary>
 /// 默认使用ECParameters来导出和导入公私钥,可能无法直接用到其他地方

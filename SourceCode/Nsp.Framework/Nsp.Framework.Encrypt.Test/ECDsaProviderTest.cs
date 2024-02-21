@@ -1,3 +1,5 @@
+using Nsp.Framework.Cryptography;
+
 namespace Nsp.Framework.Encrypt.Test;
 
 [TestClass]

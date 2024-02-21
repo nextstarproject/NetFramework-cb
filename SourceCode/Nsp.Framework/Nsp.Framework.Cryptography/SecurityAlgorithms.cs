@@ -1,4 +1,4 @@
-﻿namespace Nsp.Framework.Encrypt;
+﻿namespace Nsp.Framework.Cryptography;
 
 public enum SecurityAlgorithms
 {

@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Nsp.Framework.Encrypt\Nsp.Framework.Encrypt.csproj" />
+      <ProjectReference Include="..\Nsp.Framework.Cryptography\Nsp.Framework.Cryptography.csproj" />
     </ItemGroup>
 
 </Project>

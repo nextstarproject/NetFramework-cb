@@ -1,4 +1,4 @@
-﻿using Nsp.Framework.Encrypt;
+﻿using Nsp.Framework.Cryptography;
 
 namespace Launch.EncryptTest;
 

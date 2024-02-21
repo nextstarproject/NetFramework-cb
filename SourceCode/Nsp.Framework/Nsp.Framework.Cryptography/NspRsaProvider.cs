@@ -3,16 +3,16 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace Nsp.Framework.Encrypt;
+namespace Nsp.Framework.Cryptography;
 
-public class NspRsaPssProvider : IDisposable
+public class NspRsaProvider : IDisposable
 {
     private int _size { get; init; } = 2048;
-    private RSA? _rsa { get; init; } = null;
-    private RSA? _rsaPrivate { get; init; } = null;
-    private RSA? _rsaPublic { get; init; } = null;
+    private RSACryptoServiceProvider? _rsa { get; init; } = null;
+    private RSACryptoServiceProvider? _rsaPrivate { get; init; } = null;
+    private RSACryptoServiceProvider? _rsaPublic { get; init; } = null;
 
-    public NspRsaPssProvider()
+    public NspRsaProvider()
     {
         _size = 2048;
         _rsa = Create();
@@ -22,27 +22,27 @@ public class NspRsaPssProvider : IDisposable
     /// 
     /// </summary>
     /// <param name="keySize">1024、2048、3096、</param>
-    public NspRsaPssProvider(int keySize)
+    public NspRsaProvider(int keySize)
     {
         _size = keySize;
         _rsa = Create();
     }
 
-    public NspRsaPssProvider(string xmlPrivateAndPublic)
+    public NspRsaProvider(string xmlPrivateAndPublic)
     {
-        var rsa = RSA.Create();
+        var rsa = new RSACryptoServiceProvider();
         rsa.FromXmlString(xmlPrivateAndPublic);
         _rsa = rsa;
     }
 
-    public NspRsaPssProvider(string base64PrivateKey, string base64PublicKey)
+    public NspRsaProvider(string base64PrivateKey, string base64PublicKey)
     {
         var privateKeyBytes = Convert.FromBase64String(base64PrivateKey);
-        var rsaPrivate = RSA.Create();
+        var rsaPrivate = new RSACryptoServiceProvider();
         rsaPrivate.ImportRSAPrivateKey(privateKeyBytes, out _);
 
         var publicKeyBytes = Convert.FromBase64String(base64PublicKey);
-        var rsaPublic = RSA.Create();
+        var rsaPublic = new RSACryptoServiceProvider();
         rsaPublic.ImportRSAPublicKey(publicKeyBytes, out _);
 
         _rsaPrivate = rsaPrivate;
@@ -135,6 +135,61 @@ public class NspRsaPssProvider : IDisposable
     }
 
     /// <summary>
+    /// 公钥加密
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public string Encrypt(string data)
+    {
+        // 将原始数据转换为字节数组
+        var originalBytes = Encoding.UTF8.GetBytes(data);
+
+        byte[] encryptedBytes;
+        if (_rsa != null)
+        {
+            encryptedBytes = _rsa.Encrypt(originalBytes, false);
+        }
+        else if (_rsaPublic != null)
+        {
+            encryptedBytes = _rsaPublic.Encrypt(originalBytes, false);
+        }
+        else
+        {
+            throw new ArgumentNullException(nameof(_rsa), "_rsa and _rsaPublic is null");
+        }
+
+        return Convert.ToBase64String(encryptedBytes);
+    }
+    
+    /// <summary>
+    /// 私钥解密
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public string Decrypt(string data)
+    {
+        var contentBytes = Convert.FromBase64String(data);
+
+        byte[] decryptedBytes;
+        if (_rsa != null)
+        {
+            decryptedBytes = _rsa.Decrypt(contentBytes, false);
+        }
+        else if (_rsaPrivate != null)
+        {
+            decryptedBytes = _rsaPrivate.Decrypt(contentBytes, false);
+        }
+        else
+        {
+            throw new ArgumentNullException(nameof(_rsa), "_rsa and _rsaPublic is null");
+        }
+
+        return Encoding.UTF8.GetString(decryptedBytes);
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     /// <param name="notBefore">不设置默认现在</param>
@@ -171,44 +226,69 @@ public class NspRsaPssProvider : IDisposable
         _rsaPublic?.Dispose();
     }
 
-    private RSA Create()
+    private RSACryptoServiceProvider Create()
     {
-        var rsa = RSA.Create(_size);
+        var rsa = new RSACryptoServiceProvider(_size);
         return rsa;
     }
 
-    private byte[] SingData(RSA rsa, string data, SecurityAlgorithms algorithms)
+    private byte[] SingData(RSACryptoServiceProvider rsa, string data, SecurityAlgorithms algorithms)
     {
         // 将数据转换为字节数组
         var dataBytes = Encoding.UTF8.GetBytes(data);
 
+        var hash = algorithms switch
+        {
+            SecurityAlgorithms.SHA384 => SHA384.Create().ComputeHash(dataBytes),
+            SecurityAlgorithms.SHA512 => SHA512.Create().ComputeHash(dataBytes),
+            _ => SHA256.Create().ComputeHash(dataBytes)
+        };
+
         // 使用私钥进行签名
-        var signatureBytes = rsa.SignData(dataBytes, ConvertAlgorithmName(algorithms), RSASignaturePadding.Pss);
+        var signatureBytes = rsa.SignHash(hash, CryptoConfig.MapNameToOID(ConvertAlgorithmName(algorithms)));
 
         return signatureBytes;
     }
 
-    private bool VerifySignature(RSA rsa, string data, string signature,
+    private bool VerifySignature(RSACryptoServiceProvider rsa, string data, string signature,
         SecurityAlgorithms algorithms)
     {
         // 将数据转换为字节数组
         var dataBytes = Encoding.UTF8.GetBytes(data);
+
+        var hash = algorithms switch
+        {
+            SecurityAlgorithms.SHA384 => SHA384.Create().ComputeHash(dataBytes),
+            SecurityAlgorithms.SHA512 => SHA512.Create().ComputeHash(dataBytes),
+            _ => SHA256.Create().ComputeHash(dataBytes)
+        };
+
         // 将Base64字符串的签名转换为字节数组
         var signatureBytes = Convert.FromBase64String(signature);
 
         // 使用私钥进行签名
-        var isValid = rsa.VerifyData(dataBytes, signatureBytes, ConvertAlgorithmName(algorithms), RSASignaturePadding.Pss);
+        var isValid = rsa.VerifyHash(hash, CryptoConfig.MapNameToOID(ConvertAlgorithmName(algorithms)), signatureBytes);
+
         return isValid;
     }
-    
-    private HashAlgorithmName ConvertAlgorithmName(SecurityAlgorithms algorithms)
+
+    private string ConvertAlgorithmName(SecurityAlgorithms algorithms)
     {
         return algorithms switch
         {
-            SecurityAlgorithms.SHA256 => HashAlgorithmName.SHA256,
-            SecurityAlgorithms.SHA384 => HashAlgorithmName.SHA384,
-            SecurityAlgorithms.SHA512 => HashAlgorithmName.SHA512,
-            _ => HashAlgorithmName.SHA256
+            SecurityAlgorithms.SHA384 => "SHA384",
+            SecurityAlgorithms.SHA512 => "SHA512",
+            _ => "SHA256"
+        };
+    }
+
+    private RSAEncryptionPadding ConvertOAEP(SecurityAlgorithms algorithms)
+    {
+        return algorithms switch
+        {
+            SecurityAlgorithms.SHA384 => RSAEncryptionPadding.OaepSHA384,
+            SecurityAlgorithms.SHA512 => RSAEncryptionPadding.OaepSHA512,
+            _ => RSAEncryptionPadding.OaepSHA3_256
         };
     }
 }
