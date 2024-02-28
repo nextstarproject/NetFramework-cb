@@ -4,6 +4,7 @@ namespace Nsp.Framework.Cryptography;
 
 public class NspRsaPssProvider : IDisposable
 {
+    private IReadOnlyCollection<int> keySizeCollection => new List<int>() {1024, 2048, 3072, 4096}.AsReadOnly();
     private int _size { get; init; } = 2048;
     private RSA? _rsa { get; init; } = null;
     private RSA? _rsaPrivate { get; init; } = null;
@@ -21,6 +22,10 @@ public class NspRsaPssProvider : IDisposable
     /// <param name="keySize">1024、2048、3096、</param>
     public NspRsaPssProvider(int keySize)
     {
+        if (!keySizeCollection.Contains(keySize))
+        {
+            throw new ArgumentException("keySize must in 1024,2048,3072,4096");
+        }
         _size = keySize;
         _rsa = Create();
     }

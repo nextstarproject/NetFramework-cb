@@ -4,6 +4,7 @@ namespace Nsp.Framework.Cryptography;
 
 public class NspRsaProvider : IDisposable
 {
+    private IReadOnlyCollection<int> keySizeCollection => new List<int>() {1024, 2048, 3072, 4096}.AsReadOnly();
     private int _size { get; init; } = 2048;
     private RSACryptoServiceProvider? _rsa { get; init; } = null;
     private RSACryptoServiceProvider? _rsaPrivate { get; init; } = null;
@@ -21,6 +22,11 @@ public class NspRsaProvider : IDisposable
     /// <param name="keySize">1024、2048、3096、</param>
     public NspRsaProvider(int keySize)
     {
+        if (!keySizeCollection.Contains(keySize))
+        {
+            throw new ArgumentException("keySize must in 1024,2048,3072,4096");
+        }
+
         _size = keySize;
         _rsa = Create();
     }
@@ -158,7 +164,7 @@ public class NspRsaProvider : IDisposable
 
         return Convert.ToBase64String(encryptedBytes);
     }
-    
+
     /// <summary>
     /// 私钥解密
     /// </summary>
@@ -193,7 +199,8 @@ public class NspRsaProvider : IDisposable
     /// <param name="notAfter">不设置默认一年</param>
     /// <param name="name">设置CN名称{name}RSACertificate</param>
     /// <returns></returns>
-    public X509Certificate2 ExportX509Certificate2(DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null, string name = "NextStar")
+    public X509Certificate2 ExportX509Certificate2(DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,
+        string name = "NextStar")
     {
         ArgumentNullException.ThrowIfNull(_rsa);
         notBefore ??= DateTimeOffset.Now;

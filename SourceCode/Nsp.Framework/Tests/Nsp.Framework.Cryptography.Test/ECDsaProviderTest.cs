@@ -5,22 +5,24 @@ namespace Nsp.Framework.Cryptography.Test;
 [TestClass]
 public class ECDsaProviderTest
 {
-    private NspECDsaProvider _firstEcDsaProvider;
     public ECDsaProviderTest()
     {
-        _firstEcDsaProvider = new NspECDsaProvider(SecurityAlgorithms.SHA512);
     }
 
     /// <summary>
     /// 基本的签名和校验
     /// </summary>
     [TestMethod]
-    public void BasicSignAndVerify()
+    [DataRow(SecurityAlgorithms.SHA256)]
+    [DataRow(SecurityAlgorithms.SHA384)]
+    [DataRow(SecurityAlgorithms.SHA512)]
+    public void BasicSignAndVerify(SecurityAlgorithms algorithms)
     {
-        var x509Cer1 = _firstEcDsaProvider.ExportX509Certificate2();
+        var firstEcDsaProvider = new NspECDsaProvider(algorithms);
+        var x509Cer1 = firstEcDsaProvider.ExportX509Certificate2();
         Assert.IsNotNull(x509Cer1);
-        var signData = _firstEcDsaProvider.SignData("Hello Word");
-        var verify = _firstEcDsaProvider.VerifyData("Hello Word", signData);
+        var signData = firstEcDsaProvider.SignData("Hello Word");
+        var verify = firstEcDsaProvider.VerifyData("Hello Word", signData);
         Assert.IsTrue(verify);
     }
 
@@ -28,11 +30,15 @@ public class ECDsaProviderTest
     /// 导入key，通过Parameters出来的值
     /// </summary>
     [TestMethod]
-    public void ImportNewKey()
+    [DataRow(SecurityAlgorithms.SHA256)]
+    [DataRow(SecurityAlgorithms.SHA384)]
+    [DataRow(SecurityAlgorithms.SHA512)]
+    public void ImportNewKey(SecurityAlgorithms algorithms)
     {
-        var publicKey = _firstEcDsaProvider.GetBase64PublicKey(true);
-        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey(true);
-        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512,true))
+        var firstEcDsaProvider = new NspECDsaProvider(algorithms);
+        var publicKey = firstEcDsaProvider.GetBase64PublicKey(true);
+        var privateKey = firstEcDsaProvider.GetBase64PrivateKey(true);
+        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, algorithms,true))
         {
             var publicKey2 = ecdsa2.GetBase64PublicKey(true);
             var privateKey2 = ecdsa2.GetBase64PrivateKey(true);
@@ -47,12 +53,16 @@ public class ECDsaProviderTest
     /// 导入key后签名和校验（现有和之前签名），通过Parameters出来的值
     /// </summary>
     [TestMethod]
-    public void ImportSignAndVerify()
+    [DataRow(SecurityAlgorithms.SHA256)]
+    [DataRow(SecurityAlgorithms.SHA384)]
+    [DataRow(SecurityAlgorithms.SHA512)]
+    public void ImportSignAndVerify(SecurityAlgorithms algorithms)
     {
-        var publicKey = _firstEcDsaProvider.GetBase64PublicKey(true);
-        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey(true);
-        var signData = _firstEcDsaProvider.SignData("Hello Word");
-        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512,true))
+        var firstEcDsaProvider = new NspECDsaProvider(algorithms);
+        var publicKey = firstEcDsaProvider.GetBase64PublicKey(true);
+        var privateKey = firstEcDsaProvider.GetBase64PrivateKey(true);
+        var signData = firstEcDsaProvider.SignData("Hello Word");
+        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, algorithms,true))
         {
             var publicKey2 = ecdsa2.GetBase64PublicKey(true);
             var privateKey2 = ecdsa2.GetBase64PrivateKey(true);
@@ -75,11 +85,15 @@ public class ECDsaProviderTest
     /// 不使用Parameters，正常Pkcs8导出和导入，判断是否相等
     /// </summary>
     [TestMethod]
-    public void NoParametersImportExport()
+    [DataRow(SecurityAlgorithms.SHA256)]
+    [DataRow(SecurityAlgorithms.SHA384)]
+    [DataRow(SecurityAlgorithms.SHA512)]
+    public void NoParametersImportExport(SecurityAlgorithms algorithms)
     {
-        var publicKey = _firstEcDsaProvider.GetBase64PublicKey();
-        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey();
-        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512))
+        var firstEcDsaProvider = new NspECDsaProvider(algorithms);
+        var publicKey = firstEcDsaProvider.GetBase64PublicKey();
+        var privateKey = firstEcDsaProvider.GetBase64PrivateKey();
+        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, algorithms))
         {
             var publicKey2 = ecdsa2.GetBase64PublicKey();
             var privateKey2 = ecdsa2.GetBase64PrivateKey();
@@ -92,12 +106,16 @@ public class ECDsaProviderTest
     /// 不使用Parameters，正常Pkcs8导出和导入，判断签名和校验是否正确
     /// </summary>
     [TestMethod]
-    public void NoParametersImportSignAndVerify()
+    [DataRow(SecurityAlgorithms.SHA256)]
+    [DataRow(SecurityAlgorithms.SHA384)]
+    [DataRow(SecurityAlgorithms.SHA512)]
+    public void NoParametersImportSignAndVerify(SecurityAlgorithms algorithms)
     {
-        var publicKey = _firstEcDsaProvider.GetBase64PublicKey();
-        var privateKey = _firstEcDsaProvider.GetBase64PrivateKey();
-        var signData = _firstEcDsaProvider.SignData("Hello Word");
-        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512))
+        var firstEcDsaProvider = new NspECDsaProvider(algorithms);
+        var publicKey = firstEcDsaProvider.GetBase64PublicKey();
+        var privateKey = firstEcDsaProvider.GetBase64PrivateKey();
+        var signData = firstEcDsaProvider.SignData("Hello Word");
+        using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, algorithms))
         {
             var publicKey2 = ecdsa2.GetBase64PublicKey();
             var privateKey2 = ecdsa2.GetBase64PrivateKey();

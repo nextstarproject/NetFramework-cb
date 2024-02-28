@@ -5,39 +5,47 @@ namespace Nsp.Framework.Cryptography.Test;
 [TestClass]
 public class RsaProviderTest
 {
-    private NspRsaProvider _firstRsaProvider;
     public RsaProviderTest()
     {
-        _firstRsaProvider = new NspRsaProvider();
     }
 
     [TestMethod]
-    public void BasicTest()
+    [DataRow(1024)]
+    [DataRow(2048)]
+    [DataRow(3072)]
+    [DataRow(4096)]
+    public void BasicTest(int keySize)
     {
-        var publicKey = _firstRsaProvider.GetBase64PublicKey();
-        var privateKey = _firstRsaProvider.GetBase64PrivateKey();
-        var xmlKey = _firstRsaProvider.ExportXmlPublicAndPrivate();
+        var firstEcDsaProvider = new NspRsaProvider(keySize);
+        var publicKey = firstEcDsaProvider.GetBase64PublicKey();
+        var privateKey = firstEcDsaProvider.GetBase64PrivateKey();
+        var xmlKey = firstEcDsaProvider.ExportXmlPublicAndPrivate();
         Assert.IsNotNull(publicKey);
         Assert.IsNotNull(privateKey);
         Assert.IsNotNull(xmlKey);
-        var x509Cer1 = _firstRsaProvider.ExportX509Certificate2();
+        var x509Cer1 = firstEcDsaProvider.ExportX509Certificate2();
         Assert.IsNotNull(x509Cer1);
         
         var str = Guid.NewGuid().ToString();
-        var signData = _firstRsaProvider.SignData(str);
-        var isValid = _firstRsaProvider.VerifyData(str, signData);
+        var signData = firstEcDsaProvider.SignData(str);
+        var isValid = firstEcDsaProvider.VerifyData(str, signData);
         Assert.IsTrue(isValid);
         
-        var encryptData = _firstRsaProvider.Encrypt(str);
-        var originData = _firstRsaProvider.Decrypt(encryptData);
+        var encryptData = firstEcDsaProvider.Encrypt(str);
+        var originData = firstEcDsaProvider.Decrypt(encryptData);
         Assert.AreEqual(originData,str);
     }
 
     [TestMethod]
-    public void SplitImportTest()
+    [DataRow(1024)]
+    [DataRow(2048)]
+    [DataRow(3072)]
+    [DataRow(4096)]
+    public void SplitImportTest(int keySize)
     {
-        var publicKey = _firstRsaProvider.GetBase64PublicKey();
-        var privateKey = _firstRsaProvider.GetBase64PrivateKey();
+        var firstEcDsaProvider = new NspRsaProvider(keySize);
+        var publicKey = firstEcDsaProvider.GetBase64PublicKey();
+        var privateKey = firstEcDsaProvider.GetBase64PrivateKey();
         var rsa2 = new NspRsaProvider(privateKey, publicKey);
         var publicKey2 = rsa2.GetBase64PublicKey();
         var privateKey2 = rsa2.GetBase64PrivateKey();
@@ -46,12 +54,12 @@ public class RsaProviderTest
         
         //原始
         var str = Guid.NewGuid().ToString();
-        var signData = _firstRsaProvider.SignData(str);
-        var isValid = _firstRsaProvider.VerifyData(str, signData);
+        var signData = firstEcDsaProvider.SignData(str);
+        var isValid = firstEcDsaProvider.VerifyData(str, signData);
         Assert.IsTrue(isValid);
         
-        var encryptData = _firstRsaProvider.Encrypt(str);
-        var originData = _firstRsaProvider.Decrypt(encryptData);
+        var encryptData = firstEcDsaProvider.Encrypt(str);
+        var originData = firstEcDsaProvider.Decrypt(encryptData);
         Assert.AreEqual(originData,str);
         
         
@@ -69,26 +77,31 @@ public class RsaProviderTest
     }
     
     [TestMethod]
-    public void XmlImportTest()
+    [DataRow(1024)]
+    [DataRow(2048)]
+    [DataRow(3072)]
+    [DataRow(4096)]
+    public void XmlImportTest(int keySize)
     {
-        var xmlKey = _firstRsaProvider.ExportXmlPublicAndPrivate();
+        var firstEcDsaProvider = new NspRsaProvider(keySize);
+        var xmlKey = firstEcDsaProvider.ExportXmlPublicAndPrivate();
         var rsa2 = new NspRsaProvider(xmlKey);
         var xmlKey2 = rsa2.ExportXmlPublicAndPrivate();
         Assert.AreEqual(xmlKey2, xmlKey);
         
-        var x509Cer1 = _firstRsaProvider.ExportX509Certificate2();
+        var x509Cer1 = firstEcDsaProvider.ExportX509Certificate2();
         Assert.IsNotNull(x509Cer1);
         var x509Cer2 = rsa2.ExportX509Certificate2();
         Assert.IsNotNull(x509Cer2);
         
         //原始
         var str = Guid.NewGuid().ToString();
-        var signData = _firstRsaProvider.SignData(str);
-        var isValid = _firstRsaProvider.VerifyData(str, signData);
+        var signData = firstEcDsaProvider.SignData(str);
+        var isValid = firstEcDsaProvider.VerifyData(str, signData);
         Assert.IsTrue(isValid);
         
-        var encryptData = _firstRsaProvider.Encrypt(str);
-        var originData = _firstRsaProvider.Decrypt(encryptData);
+        var encryptData = firstEcDsaProvider.Encrypt(str);
+        var originData = firstEcDsaProvider.Decrypt(encryptData);
         Assert.AreEqual(originData,str);
         
         
