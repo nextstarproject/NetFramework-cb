@@ -1,6 +1,6 @@
 ﻿using Nsp.Framework.Cryptography;
 
-namespace Nsp.Framework.Encrypt.Test;
+namespace Nsp.Framework.Cryptography.Test;
 
 [TestClass]
 public class RsaProviderTest
