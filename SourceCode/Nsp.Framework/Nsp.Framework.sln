@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{11FDA843
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nsp.Framework.Cryptography.Test", "Tests\Nsp.Framework.Cryptography.Test\Nsp.Framework.Cryptography.Test.csproj", "{C8AF76BE-5A0B-45DC-BC47-684C7CA4E845}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nsp.Framework.Core.Test", "Tests\Nsp.Framework.Core.Test\Nsp.Framework.Core.Test.csproj", "{4A4E0BAD-D402-4965-87BD-3D86025DD180}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,8 +40,13 @@ Global
 		{C8AF76BE-5A0B-45DC-BC47-684C7CA4E845}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8AF76BE-5A0B-45DC-BC47-684C7CA4E845}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8AF76BE-5A0B-45DC-BC47-684C7CA4E845}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A4E0BAD-D402-4965-87BD-3D86025DD180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A4E0BAD-D402-4965-87BD-3D86025DD180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A4E0BAD-D402-4965-87BD-3D86025DD180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A4E0BAD-D402-4965-87BD-3D86025DD180}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C8AF76BE-5A0B-45DC-BC47-684C7CA4E845} = {11FDA843-8065-4EE8-B1E7-61E6B9E5A4C1}
+		{4A4E0BAD-D402-4965-87BD-3D86025DD180} = {11FDA843-8065-4EE8-B1E7-61E6B9E5A4C1}
 	EndGlobalSection
 EndGlobal
