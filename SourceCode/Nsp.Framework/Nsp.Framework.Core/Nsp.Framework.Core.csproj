@@ -4,6 +4,28 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Title>Nsp.Framework.Core</Title>
+        <Authors>nexstarproject</Authors>
+        <Copyright>nexstarproject</Copyright>
+        <PackageProjectUrl>https://github.com/nextstarproject/NetFramework-cb/tree/master/SourceCode/Nsp.Framework/Nsp.Framework.Core</PackageProjectUrl>
+        <PackageIcon>Resource\favicon.png</PackageIcon>
+        <RepositoryUrl>https://github.com/nextstarproject/NetFramework-cb</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageIcon>Resource\favicon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="Resource\favicon.png">
+            <Pack>True</Pack>
+            <PackagePath>/</PackagePath>
+        </None>
+        <None Update="README.md">
+            <Pack>True</Pack>
+            <PackagePath>/</PackagePath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
 </Project>

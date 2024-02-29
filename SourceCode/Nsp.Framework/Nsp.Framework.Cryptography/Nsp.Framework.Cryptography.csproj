@@ -4,15 +4,38 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Title>Nsp.Framework.Cryptography</Title>
+        <Authors>nextstarproject</Authors>
+        <Copyright>nextstarproject</Copyright>
+        <PackageIcon>Resource\favicon.png</PackageIcon>
+        <Description>Extract some cryptography for signing and verification, as well as encryption and decryption, jwt verification and signing.</Description>
+        <PackageProjectUrl>https://github.com/nextstarproject/NetFramework-cb/tree/master/SourceCode/Nsp.Framework/Nsp.Framework.Cryptography</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/nextstarproject/NetFramework-cb</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageIcon>Resource\favicon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Nsp.Framework.Core\Nsp.Framework.Core.csproj" />
+        <ProjectReference Include="..\Nsp.Framework.Core\Nsp.Framework.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.4.0" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.4.0"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Resource\favicon.png">
+            <Pack>True</Pack>
+            <PackagePath>/</PackagePath>
+        </None>
+        <None Update="README.md">
+            <Pack>True</Pack>
+            <PackagePath>/</PackagePath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>
