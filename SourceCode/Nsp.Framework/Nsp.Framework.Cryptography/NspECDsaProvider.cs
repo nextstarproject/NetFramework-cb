@@ -170,6 +170,7 @@ public class NspECDsaProvider : IDisposable
     /// <param name="notAfter">不设置默认一年</param>
     /// <param name="name">设置CN名称{name}ECDsaCertificate</param>
     /// <returns></returns>
+    [Obsolete("暂时无法使用")]
     public X509Certificate2 ExportX509Certificate2(DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null, string name = "NextStar")
     {
         ArgumentNullException.ThrowIfNull(_ecDsa);
@@ -181,12 +182,9 @@ public class NspECDsaProvider : IDisposable
         var certificateRequest = new CertificateRequest(
             new X500DistinguishedName($"CN={name}ECDsaCertificate"),
             _ecDsa,
-            HashAlgorithmName.SHA256
+            ConvertAlgorithmName(_algorithms)
         );
 
-        // 设置证书的有效期
-        certificateRequest.CertificateExtensions.Add(
-            new X509BasicConstraintsExtension(false, false, 0, false));
         var certificate =
             certificateRequest.CreateSelfSigned(notBefore.Value, notAfter.Value);
         return certificate;

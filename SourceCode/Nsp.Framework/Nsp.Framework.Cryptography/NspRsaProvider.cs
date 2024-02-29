@@ -285,14 +285,4 @@ public class NspRsaProvider : IDisposable
             _ => "SHA256"
         };
     }
-
-    private RSAEncryptionPadding ConvertOAEP(SecurityAlgorithms algorithms)
-    {
-        return algorithms switch
-        {
-            SecurityAlgorithms.SHA384 => RSAEncryptionPadding.OaepSHA384,
-            SecurityAlgorithms.SHA512 => RSAEncryptionPadding.OaepSHA512,
-            _ => RSAEncryptionPadding.OaepSHA3_256
-        };
-    }
 }
