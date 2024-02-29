@@ -58,7 +58,7 @@ public class NspHmacProvider : IDisposable
     public (SymmetricSecurityKey hmacSecurityKey, string hmacAlgorithms) ExportSecurityKey(string? keyId = null)
     {
         var securityKey = new SymmetricSecurityKey(GenerateKey());
-        return (securityKey, ConvertSecurityAlgorithms());
+        return (securityKey, _algorithms.ConvertHmacSecurityAlgorithms());
     }
     
     public void Dispose()
@@ -80,16 +80,6 @@ public class NspHmacProvider : IDisposable
             NspSecurityAlgorithms.SHA384 => new HMACSHA384(_secretKey),
             NspSecurityAlgorithms.SHA512 => new HMACSHA512(_secretKey),
             _ => new HMACSHA256(_secretKey)
-        };
-    }
-    
-    private string ConvertSecurityAlgorithms()
-    {
-        return _algorithms switch
-        {
-            NspSecurityAlgorithms.SHA384 => SecurityAlgorithms.HmacSha384,
-            NspSecurityAlgorithms.SHA512 => SecurityAlgorithms.HmacSha512,
-            _ => SecurityAlgorithms.HmacSha512
         };
     }
 }

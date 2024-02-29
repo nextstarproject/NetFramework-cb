@@ -260,7 +260,7 @@ public class NspRsaProvider : IDisposable
         };
 
         // 使用私钥进行签名
-        var signatureBytes = rsa.SignHash(hash, CryptoConfig.MapNameToOID(ConvertAlgorithmName(algorithms)));
+        var signatureBytes = rsa.SignHash(hash, CryptoConfig.MapNameToOID(algorithms.ConvertHashAlgorithmNameString()));
 
         return signatureBytes;
     }
@@ -282,18 +282,8 @@ public class NspRsaProvider : IDisposable
         var signatureBytes = Convert.FromBase64String(signature);
 
         // 使用私钥进行签名
-        var isValid = rsa.VerifyHash(hash, CryptoConfig.MapNameToOID(ConvertAlgorithmName(algorithms)), signatureBytes);
+        var isValid = rsa.VerifyHash(hash, CryptoConfig.MapNameToOID(algorithms.ConvertHashAlgorithmNameString()), signatureBytes);
 
         return isValid;
-    }
-
-    private string ConvertAlgorithmName(NspSecurityAlgorithms algorithms)
-    {
-        return algorithms switch
-        {
-            NspSecurityAlgorithms.SHA384 => "SHA384",
-            NspSecurityAlgorithms.SHA512 => "SHA512",
-            _ => "SHA256"
-        };
     }
 }

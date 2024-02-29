@@ -196,7 +196,7 @@ public class NspRsaPssProvider : IDisposable
         var dataBytes = Encoding.UTF8.GetBytes(data);
 
         // 使用私钥进行签名
-        var signatureBytes = rsa.SignData(dataBytes, ConvertAlgorithmName(algorithms), RSASignaturePadding.Pss);
+        var signatureBytes = rsa.SignData(dataBytes, algorithms.ConvertHashAlgorithmName(), RSASignaturePadding.Pss);
 
         return signatureBytes;
     }
@@ -210,18 +210,7 @@ public class NspRsaPssProvider : IDisposable
         var signatureBytes = Convert.FromBase64String(signature);
 
         // 使用私钥进行签名
-        var isValid = rsa.VerifyData(dataBytes, signatureBytes, ConvertAlgorithmName(algorithms), RSASignaturePadding.Pss);
+        var isValid = rsa.VerifyData(dataBytes, signatureBytes, algorithms.ConvertHashAlgorithmName(), RSASignaturePadding.Pss);
         return isValid;
-    }
-    
-    private HashAlgorithmName ConvertAlgorithmName(NspSecurityAlgorithms algorithms)
-    {
-        return algorithms switch
-        {
-            NspSecurityAlgorithms.SHA256 => HashAlgorithmName.SHA256,
-            NspSecurityAlgorithms.SHA384 => HashAlgorithmName.SHA384,
-            NspSecurityAlgorithms.SHA512 => HashAlgorithmName.SHA512,
-            _ => HashAlgorithmName.SHA256
-        };
     }
 }

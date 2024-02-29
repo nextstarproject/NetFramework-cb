@@ -96,7 +96,7 @@ public class NspECDsaProvider : IDisposable
             return Convert.ToBase64String(privateKey);
         }
 
-        throw new ArgumentNullException(nameof(_ecDsa),"_ecDsa and _ecDsaPrivate is null");
+        throw new ArgumentNullException(nameof(_ecDsa), "_ecDsa and _ecDsaPrivate is null");
     }
 
     public string GetBase64PublicKey(bool isParameters = false)
@@ -120,7 +120,7 @@ public class NspECDsaProvider : IDisposable
             return Convert.ToBase64String(publicKey);
         }
 
-        throw new ArgumentNullException(nameof(_ecDsa),"_ecDsa and _ecDsaPublic is null");
+        throw new ArgumentNullException(nameof(_ecDsa), "_ecDsa and _ecDsaPublic is null");
     }
 
     public string SignData([NotNull] string data)
@@ -129,15 +129,15 @@ public class NspECDsaProvider : IDisposable
         var dataToSign = Encoding.UTF8.GetBytes(data);
         if (_ecDsa != null)
         {
-            signature = _ecDsa.SignData(dataToSign, ConvertAlgorithmName(_algorithms));
+            signature = _ecDsa.SignData(dataToSign, _algorithms.ConvertHashAlgorithmName());
         }
         else if (_ecDsaPrivate != null)
         {
-            signature = _ecDsaPrivate.SignData(dataToSign, ConvertAlgorithmName(_algorithms));
+            signature = _ecDsaPrivate.SignData(dataToSign, _algorithms.ConvertHashAlgorithmName());
         }
         else
         {
-            throw new ArgumentNullException(nameof(_ecDsa),"_ecDsa and _ecDsaPrivate is null");
+            throw new ArgumentNullException(nameof(_ecDsa), "_ecDsa and _ecDsaPrivate is null");
         }
 
         return Convert.ToBase64String(signature);
@@ -150,15 +150,15 @@ public class NspECDsaProvider : IDisposable
         var isValid = false;
         if (_ecDsa != null)
         {
-            isValid = _ecDsa.VerifyData(dataToSign, signatureBytes, ConvertAlgorithmName(_algorithms));
+            isValid = _ecDsa.VerifyData(dataToSign, signatureBytes, _algorithms.ConvertHashAlgorithmName());
         }
         else if (_ecDsaPublic != null)
         {
-            isValid = _ecDsaPublic.VerifyData(dataToSign, signatureBytes, ConvertAlgorithmName(_algorithms));
+            isValid = _ecDsaPublic.VerifyData(dataToSign, signatureBytes, _algorithms.ConvertHashAlgorithmName());
         }
         else
         {
-            throw new ArgumentNullException(nameof(_ecDsa),"_ecDsa and _ecDsaPublic is null");
+            throw new ArgumentNullException(nameof(_ecDsa), "_ecDsa and _ecDsaPublic is null");
         }
 
         return isValid;
@@ -172,7 +172,8 @@ public class NspECDsaProvider : IDisposable
     /// <param name="name">设置CN名称{name}ECDsaCertificate</param>
     /// <returns></returns>
     [Obsolete("导出暂时有问题，请谨慎使用")]
-    public X509Certificate2 ExportX509Certificate2(DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null, string name = "NextStar")
+    public X509Certificate2 ExportX509Certificate2(DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,
+        string name = "NextStar")
     {
         ArgumentNullException.ThrowIfNull(_ecDsa);
         notBefore ??= DateTimeOffset.Now;
@@ -183,7 +184,7 @@ public class NspECDsaProvider : IDisposable
         var certificateRequest = new CertificateRequest(
             new X500DistinguishedName($"CN={name}ECDsaCertificate"),
             _ecDsa,
-            ConvertAlgorithmName(_algorithms)
+            _algorithms.ConvertHashAlgorithmName()
         );
 
         var certificate =
@@ -198,8 +199,8 @@ public class NspECDsaProvider : IDisposable
         {
             KeyId = keyId ?? Guid.NewGuid().ToString()
         };
-        var ecdsaAlgorithms = ConvertJwtAlgorithmName(_algorithms);
-        return (ecdsaSecurityKey,ecdsaAlgorithms);
+        var ecdsaAlgorithms = _algorithms.ConvertEcdsaSecurityAlgorithms();
+        return (ecdsaSecurityKey, ecdsaAlgorithms);
     }
 
     public void Dispose()
@@ -219,27 +220,6 @@ public class NspECDsaProvider : IDisposable
             NspSecurityAlgorithms.SHA384 => ECDsa.Create(ECCurve.NamedCurves.nistP384),
             NspSecurityAlgorithms.SHA512 => ECDsa.Create(ECCurve.NamedCurves.nistP521),
             _ => ECDsa.Create(ECCurve.NamedCurves.nistP256)
-        };
-    }
-
-    private HashAlgorithmName ConvertAlgorithmName(NspSecurityAlgorithms algorithms)
-    {
-        return algorithms switch
-        {
-            NspSecurityAlgorithms.SHA256 => HashAlgorithmName.SHA256,
-            NspSecurityAlgorithms.SHA384 => HashAlgorithmName.SHA384,
-            NspSecurityAlgorithms.SHA512 => HashAlgorithmName.SHA512,
-            _ => HashAlgorithmName.SHA256
-        };
-    }
-    
-    private string ConvertJwtAlgorithmName(NspSecurityAlgorithms algorithms)
-    {
-        return algorithms switch
-        {
-            NspSecurityAlgorithms.SHA384 => SecurityAlgorithms.EcdsaSha384,
-            NspSecurityAlgorithms.SHA512 => SecurityAlgorithms.EcdsaSha512,
-            _ => SecurityAlgorithms.EcdsaSha256,
         };
     }
 
