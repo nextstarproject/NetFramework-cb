@@ -1,3 +1,5 @@
-﻿using Launch.WatermarkTest;
+﻿using Launch.EncryptTest;
+using Launch.WatermarkTest;
 
-WatermarkTest.Main();
+//WatermarkTest.Main();
+EncryptTest.RsaPssTest();
