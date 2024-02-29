@@ -167,6 +167,11 @@ public class NspRsaPssProvider : IDisposable
         return certificate;
     }
 
+    /// <summary>
+    /// PS512 不支持 <see cref="_size"/> 为 1024 位
+    /// </summary>
+    /// <param name="keyId"></param>
+    /// <returns></returns>
     public RsaSecurityKey ExportSecurityKey(string? keyId = null)
     {
         ArgumentNullException.ThrowIfNull(_rsa);

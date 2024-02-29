@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using Nsp.Framework.Core;
 
 namespace Nsp.Framework.Cryptography.Test;
 
@@ -113,7 +114,7 @@ public class JwtServiceTest
     {
         var firstEcDsaProvider = new NspRsaPssProvider(keySize);
         var x509Cer1 = firstEcDsaProvider.ExportSecurityKey();
-        var jwt = new JwtService(x509Cer1);
+        var jwt = new JwtService(x509Cer1, SecurityAlgorithms.RsaSha256);
         var token = jwt.GenerateToken(DateTime.Now, DateTime.Now.AddDays(1), new Dictionary<string, string>()
         {
             {
@@ -138,7 +139,7 @@ public class JwtServiceTest
     {
         var firstEcDsaProvider = new NspRsaPssProvider(keySize);
         var x509Cer1 = firstEcDsaProvider.ExportSecurityKey();
-        var jwt = new JwtService(x509Cer1, SecurityAlgorithms.RsaSha384);
+        var jwt = new JwtService(x509Cer1, SecurityAlgorithms.RsaSsaPssSha384);
         var token = jwt.GenerateToken(DateTime.Now, DateTime.Now.AddDays(1), new Dictionary<string, string>()
         {
             {
@@ -155,7 +156,6 @@ public class JwtServiceTest
     }
     
     [TestMethod]
-    [DataRow(1024)]
     [DataRow(2048)]
     [DataRow(3072)]
     [DataRow(4096)]
@@ -163,7 +163,7 @@ public class JwtServiceTest
     {
         var firstEcDsaProvider = new NspRsaPssProvider(keySize);
         var x509Cer1 = firstEcDsaProvider.ExportSecurityKey();
-        var jwt = new JwtService(x509Cer1, SecurityAlgorithms.RsaSha512);
+        var jwt = new JwtService(x509Cer1, SecurityAlgorithms.RsaSsaPssSha512);
         var token = jwt.GenerateToken(DateTime.Now, DateTime.Now.AddDays(1), new Dictionary<string, string>()
         {
             {
@@ -186,7 +186,7 @@ public class JwtServiceTest
     [DataRow(NspSecurityAlgorithms.SHA512)]
     public void HmacNormalTest(NspSecurityAlgorithms algorithms)
     {
-        var firstEcDsaProvider = new NspHmacProvider(algorithms);
+        var firstEcDsaProvider = new NspHmacProvider(RandomStringUtil.CreateRandomHexKey(10),algorithms);
         var x509Cer1 = firstEcDsaProvider.ExportSecurityKey();
         var jwt = new JwtService(x509Cer1);
         var token = jwt.GenerateToken(DateTime.Now, DateTime.Now.AddDays(1), new Dictionary<string, string>()

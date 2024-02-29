@@ -1,4 +1,6 @@
-﻿namespace Nsp.Framework.Cryptography.Test;
+﻿using Nsp.Framework.Core;
+
+namespace Nsp.Framework.Cryptography.Test;
 
 [TestClass]
 public class HmacProviderTest
@@ -6,7 +8,7 @@ public class HmacProviderTest
     [TestMethod]
     public void SignDataAndVerifyData()
     {
-        var hamc = new NspHmacProvider();
+        var hamc = new NspHmacProvider(RandomStringUtil.CreateRandomHexKey(10));
         var signData = hamc.SignData("Hello word");
         var result = hamc.VerifyData("Hello word", signData);
         Assert.IsTrue(result);

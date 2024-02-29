@@ -10,13 +10,6 @@ public class NspHmacProvider : IDisposable
     private readonly byte[] _secretKey;
     private readonly HMAC _hmac;
 
-    public NspHmacProvider()
-    {
-        _secretKey = RandomStringUtil.CreateRandomKey(32);
-        _algorithms = NspSecurityAlgorithms.SHA256;
-        _hmac = ConvertHmac();
-    }
-
     public NspHmacProvider(string secretKey)
     {
         _secretKey = Encoding.UTF8.GetBytes(secretKey);
@@ -30,14 +23,6 @@ public class NspHmacProvider : IDisposable
         _algorithms = algorithms;
         _hmac = ConvertHmac();
     }
-    
-    public NspHmacProvider(NspSecurityAlgorithms algorithms)
-    {
-        _secretKey = RandomStringUtil.CreateRandomKey(32);
-        _algorithms = algorithms;
-        _hmac = ConvertHmac();
-    }
-
 
     public string SignData([NotNull] string data)
     {
