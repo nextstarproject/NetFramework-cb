@@ -6,8 +6,35 @@ namespace Nsp.Framework.Cryptography;
 
 public class JwtService
 {
-    private readonly X509Certificate2 _certificate;
+    private readonly SigningCredentials? _signingCredentials;
+    private readonly X509Certificate2? _certificate;
 
+    public JwtService(SigningCredentials signingCredentials)
+    {
+        // 加载证书
+        _signingCredentials = signingCredentials;
+    }
+    
+    public JwtService(ECDsaSecurityKey ecDsaSecurityKey)
+    {
+        _signingCredentials = new SigningCredentials(ecDsaSecurityKey, SecurityAlgorithms.EcdsaSha256);
+    }
+    
+    public JwtService((ECDsaSecurityKey ecDsaSecurityKey, string ecdsaAlgorithms) ecDsaSecurity)
+    {
+        _signingCredentials = new SigningCredentials(ecDsaSecurity.ecDsaSecurityKey, ecDsaSecurity.ecdsaAlgorithms);
+    }
+    
+    public JwtService(RsaSecurityKey rsaSecurityKey)
+    {
+        _signingCredentials = new SigningCredentials(rsaSecurityKey, SecurityAlgorithms.RsaSha256);
+    }
+    
+    public JwtService((RsaSecurityKey rsaSecurityKey, string rsaAlgorithms) rsaSecurity)
+    {
+        _signingCredentials = new SigningCredentials(rsaSecurity.rsaSecurityKey, rsaSecurity.rsaAlgorithms);
+    }
+    
     public JwtService(X509Certificate2 certificate)
     {
         // 加载证书
@@ -63,7 +90,7 @@ public class JwtService
             claims: claims,
             notBefore: validFrom,
             expires: validTo,
-            signingCredentials: new X509SigningCredentials(_certificate)
+            signingCredentials: _signingCredentials ?? new X509SigningCredentials(_certificate)
         );
 
         var handler = new JwtSecurityTokenHandler();
@@ -121,9 +148,21 @@ public class JwtService
             ValidateAudience = true,
             ValidAudience = audience,
             ValidateLifetime = true,
-            IssuerSigningKey = new X509SecurityKey(_certificate),
+            IssuerSigningKey = _signingCredentials?.Key ?? new X509SecurityKey(_certificate),
             ValidateIssuerSigningKey = true
         };
         return validationParameters;
+    }
+    
+    static SigningCredentials ConvertToGenericCredentials(X509SigningCredentials x509Credentials)
+    {
+        // 从 X.509 凭据中提取密钥和算法信息
+        SecurityKey securityKey = x509Credentials.Key;
+        string algorithm = x509Credentials.Algorithm;
+
+        // 创建通用的 Signing Credentials
+        var genericCredentials = new SigningCredentials(securityKey, algorithm);
+
+        return genericCredentials;
     }
 }

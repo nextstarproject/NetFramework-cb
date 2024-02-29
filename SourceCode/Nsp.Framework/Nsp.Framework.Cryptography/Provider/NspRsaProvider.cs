@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Nsp.Framework.Cryptography;
 
@@ -98,7 +99,7 @@ public class NspRsaProvider : IDisposable
         throw new ArgumentNullException(nameof(_rsa), "_rsa and _rsaPrivate is null");
     }
 
-    public string SignData([NotNull] string data, SecurityAlgorithms algorithms = SecurityAlgorithms.SHA256)
+    public string SignData([NotNull] string data, NspSecurityAlgorithms algorithms = NspSecurityAlgorithms.SHA256)
     {
         byte[] signatureBytes;
         var dataToSign = Encoding.UTF8.GetBytes(data);
@@ -118,7 +119,7 @@ public class NspRsaProvider : IDisposable
         return Convert.ToBase64String(signatureBytes);
     }
 
-    public bool VerifyData(string data, string signature, SecurityAlgorithms algorithms = SecurityAlgorithms.SHA256)
+    public bool VerifyData(string data, string signature, NspSecurityAlgorithms algorithms = NspSecurityAlgorithms.SHA256)
     {
         var isValid = false;
         if (_rsa != null)
@@ -222,6 +223,16 @@ public class NspRsaProvider : IDisposable
             certificateRequest.CreateSelfSigned(notBefore.Value, notAfter.Value);
         return certificate;
     }
+    
+    public RsaSecurityKey ExportSecurityKey(string? keyId = null)
+    {
+        ArgumentNullException.ThrowIfNull(_rsa);
+        var rsaSecurityKey = new RsaSecurityKey(_rsa.ExportParameters(true))
+        {
+            KeyId = keyId ?? Guid.NewGuid().ToString()
+        };
+        return rsaSecurityKey;
+    }
 
     public void Dispose()
     {
@@ -236,15 +247,15 @@ public class NspRsaProvider : IDisposable
         return rsa;
     }
 
-    private byte[] SingData(RSACryptoServiceProvider rsa, string data, SecurityAlgorithms algorithms)
+    private byte[] SingData(RSACryptoServiceProvider rsa, string data, NspSecurityAlgorithms algorithms)
     {
         // 将数据转换为字节数组
         var dataBytes = Encoding.UTF8.GetBytes(data);
 
         var hash = algorithms switch
         {
-            SecurityAlgorithms.SHA384 => SHA384.Create().ComputeHash(dataBytes),
-            SecurityAlgorithms.SHA512 => SHA512.Create().ComputeHash(dataBytes),
+            NspSecurityAlgorithms.SHA384 => SHA384.Create().ComputeHash(dataBytes),
+            NspSecurityAlgorithms.SHA512 => SHA512.Create().ComputeHash(dataBytes),
             _ => SHA256.Create().ComputeHash(dataBytes)
         };
 
@@ -255,15 +266,15 @@ public class NspRsaProvider : IDisposable
     }
 
     private bool VerifySignature(RSACryptoServiceProvider rsa, string data, string signature,
-        SecurityAlgorithms algorithms)
+        NspSecurityAlgorithms algorithms)
     {
         // 将数据转换为字节数组
         var dataBytes = Encoding.UTF8.GetBytes(data);
 
         var hash = algorithms switch
         {
-            SecurityAlgorithms.SHA384 => SHA384.Create().ComputeHash(dataBytes),
-            SecurityAlgorithms.SHA512 => SHA512.Create().ComputeHash(dataBytes),
+            NspSecurityAlgorithms.SHA384 => SHA384.Create().ComputeHash(dataBytes),
+            NspSecurityAlgorithms.SHA512 => SHA512.Create().ComputeHash(dataBytes),
             _ => SHA256.Create().ComputeHash(dataBytes)
         };
 
@@ -276,12 +287,12 @@ public class NspRsaProvider : IDisposable
         return isValid;
     }
 
-    private string ConvertAlgorithmName(SecurityAlgorithms algorithms)
+    private string ConvertAlgorithmName(NspSecurityAlgorithms algorithms)
     {
         return algorithms switch
         {
-            SecurityAlgorithms.SHA384 => "SHA384",
-            SecurityAlgorithms.SHA512 => "SHA512",
+            NspSecurityAlgorithms.SHA384 => "SHA384",
+            NspSecurityAlgorithms.SHA512 => "SHA512",
             _ => "SHA256"
         };
     }

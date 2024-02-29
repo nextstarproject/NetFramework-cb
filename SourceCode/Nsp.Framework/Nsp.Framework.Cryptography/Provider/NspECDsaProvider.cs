@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Nsp.Framework.Cryptography;
 
@@ -10,21 +11,21 @@ public class NspECDsaProvider : IDisposable
     private ECDsa? _ecDsa { get; init; } = null;
     private ECDsa? _ecDsaPrivate { get; init; } = null;
     private ECDsa? _ecDsaPublic { get; init; } = null;
-    private SecurityAlgorithms _algorithms { get; init; }
+    private NspSecurityAlgorithms _algorithms { get; init; }
 
     public NspECDsaProvider()
     {
-        _algorithms = SecurityAlgorithms.SHA256;
-        _ecDsa = Create(SecurityAlgorithms.SHA256);
+        _algorithms = NspSecurityAlgorithms.SHA256;
+        _ecDsa = Create(NspSecurityAlgorithms.SHA256);
     }
 
-    public NspECDsaProvider(SecurityAlgorithms algorithms)
+    public NspECDsaProvider(NspSecurityAlgorithms algorithms)
     {
         _algorithms = algorithms;
         _ecDsa = Create(algorithms);
     }
 
-    public NspECDsaProvider(string base64PrivateKey, string base64PublicKey, SecurityAlgorithms algorithms,
+    public NspECDsaProvider(string base64PrivateKey, string base64PublicKey, NspSecurityAlgorithms algorithms,
         bool isParameters = false)
     {
         // 解码Base64字符串为字节数组
@@ -46,8 +47,8 @@ public class NspECDsaProvider : IDisposable
 
             ecParameters.Curve = algorithms switch
             {
-                SecurityAlgorithms.SHA384 => ECCurve.NamedCurves.nistP384,
-                SecurityAlgorithms.SHA512 => ECCurve.NamedCurves.nistP521,
+                NspSecurityAlgorithms.SHA384 => ECCurve.NamedCurves.nistP384,
+                NspSecurityAlgorithms.SHA512 => ECCurve.NamedCurves.nistP521,
                 _ => ECCurve.NamedCurves.nistP256
             };
 
@@ -170,7 +171,7 @@ public class NspECDsaProvider : IDisposable
     /// <param name="notAfter">不设置默认一年</param>
     /// <param name="name">设置CN名称{name}ECDsaCertificate</param>
     /// <returns></returns>
-    [Obsolete("暂时无法使用")]
+    [Obsolete("导出暂时有问题，请谨慎使用")]
     public X509Certificate2 ExportX509Certificate2(DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null, string name = "NextStar")
     {
         ArgumentNullException.ThrowIfNull(_ecDsa);
@@ -190,6 +191,17 @@ public class NspECDsaProvider : IDisposable
         return certificate;
     }
 
+    public (ECDsaSecurityKey ecDsaSecurityKey, string ecdsaAlgorithms) ExportSecurityKey(string? keyId = null)
+    {
+        ArgumentNullException.ThrowIfNull(_ecDsa);
+        var ecdsaSecurityKey = new ECDsaSecurityKey(_ecDsa)
+        {
+            KeyId = keyId ?? Guid.NewGuid().ToString()
+        };
+        var ecdsaAlgorithms = ConvertJwtAlgorithmName(_algorithms);
+        return (ecdsaSecurityKey,ecdsaAlgorithms);
+    }
+
     public void Dispose()
     {
         _ecDsa?.Dispose();
@@ -199,25 +211,35 @@ public class NspECDsaProvider : IDisposable
 
     #region Private Method
 
-    private ECDsa Create(SecurityAlgorithms algorithms)
+    private ECDsa Create(NspSecurityAlgorithms algorithms)
     {
         return algorithms switch
         {
-            SecurityAlgorithms.SHA256 => ECDsa.Create(ECCurve.NamedCurves.nistP256),
-            SecurityAlgorithms.SHA384 => ECDsa.Create(ECCurve.NamedCurves.nistP384),
-            SecurityAlgorithms.SHA512 => ECDsa.Create(ECCurve.NamedCurves.nistP521),
+            NspSecurityAlgorithms.SHA256 => ECDsa.Create(ECCurve.NamedCurves.nistP256),
+            NspSecurityAlgorithms.SHA384 => ECDsa.Create(ECCurve.NamedCurves.nistP384),
+            NspSecurityAlgorithms.SHA512 => ECDsa.Create(ECCurve.NamedCurves.nistP521),
             _ => ECDsa.Create(ECCurve.NamedCurves.nistP256)
         };
     }
 
-    private HashAlgorithmName ConvertAlgorithmName(SecurityAlgorithms algorithms)
+    private HashAlgorithmName ConvertAlgorithmName(NspSecurityAlgorithms algorithms)
     {
         return algorithms switch
         {
-            SecurityAlgorithms.SHA256 => HashAlgorithmName.SHA256,
-            SecurityAlgorithms.SHA384 => HashAlgorithmName.SHA384,
-            SecurityAlgorithms.SHA512 => HashAlgorithmName.SHA512,
+            NspSecurityAlgorithms.SHA256 => HashAlgorithmName.SHA256,
+            NspSecurityAlgorithms.SHA384 => HashAlgorithmName.SHA384,
+            NspSecurityAlgorithms.SHA512 => HashAlgorithmName.SHA512,
             _ => HashAlgorithmName.SHA256
+        };
+    }
+    
+    private string ConvertJwtAlgorithmName(NspSecurityAlgorithms algorithms)
+    {
+        return algorithms switch
+        {
+            NspSecurityAlgorithms.SHA384 => SecurityAlgorithms.EcdsaSha384,
+            NspSecurityAlgorithms.SHA512 => SecurityAlgorithms.EcdsaSha512,
+            _ => SecurityAlgorithms.EcdsaSha256,
         };
     }
 

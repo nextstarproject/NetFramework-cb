@@ -114,7 +114,7 @@ public class EncryptTest
 
     public static void ECDsaTest()
     {
-        using (var ecdsa = new NspECDsaProvider(SecurityAlgorithms.SHA512))
+        using (var ecdsa = new NspECDsaProvider(NspSecurityAlgorithms.SHA512))
         {
             var publicKey = ecdsa.GetBase64PublicKey();
             var privateKey = ecdsa.GetBase64PrivateKey();
@@ -126,7 +126,7 @@ public class EncryptTest
             var bbb = ecdsa.VerifyData("Hello Word", aaa);
             Console.WriteLine(bbb);
 
-            using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, SecurityAlgorithms.SHA512))
+            using (var ecdsa2 = new NspECDsaProvider(privateKey, publicKey, NspSecurityAlgorithms.SHA512))
             {
                 var publicKey2 = ecdsa2.GetBase64PublicKey();
                 var privateKey2 = ecdsa2.GetBase64PrivateKey();

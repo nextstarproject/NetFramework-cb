@@ -13,10 +13,10 @@ public class ECDsaProviderTest
     /// 基本的签名和校验
     /// </summary>
     [TestMethod]
-    [DataRow(SecurityAlgorithms.SHA256)]
-    [DataRow(SecurityAlgorithms.SHA384)]
-    [DataRow(SecurityAlgorithms.SHA512)]
-    public void BasicSignAndVerify(SecurityAlgorithms algorithms)
+    [DataRow(NspSecurityAlgorithms.SHA256)]
+    [DataRow(NspSecurityAlgorithms.SHA384)]
+    [DataRow(NspSecurityAlgorithms.SHA512)]
+    public void BasicSignAndVerify(NspSecurityAlgorithms algorithms)
     {
         var firstEcDsaProvider = new NspECDsaProvider(algorithms);
         var x509Cer1 = firstEcDsaProvider.ExportX509Certificate2();
@@ -30,10 +30,10 @@ public class ECDsaProviderTest
     /// 导入key，通过Parameters出来的值
     /// </summary>
     [TestMethod]
-    [DataRow(SecurityAlgorithms.SHA256)]
-    [DataRow(SecurityAlgorithms.SHA384)]
-    [DataRow(SecurityAlgorithms.SHA512)]
-    public void ImportNewKey(SecurityAlgorithms algorithms)
+    [DataRow(NspSecurityAlgorithms.SHA256)]
+    [DataRow(NspSecurityAlgorithms.SHA384)]
+    [DataRow(NspSecurityAlgorithms.SHA512)]
+    public void ImportNewKey(NspSecurityAlgorithms algorithms)
     {
         var firstEcDsaProvider = new NspECDsaProvider(algorithms);
         var publicKey = firstEcDsaProvider.GetBase64PublicKey(true);
@@ -53,10 +53,10 @@ public class ECDsaProviderTest
     /// 导入key后签名和校验（现有和之前签名），通过Parameters出来的值
     /// </summary>
     [TestMethod]
-    [DataRow(SecurityAlgorithms.SHA256)]
-    [DataRow(SecurityAlgorithms.SHA384)]
-    [DataRow(SecurityAlgorithms.SHA512)]
-    public void ImportSignAndVerify(SecurityAlgorithms algorithms)
+    [DataRow(NspSecurityAlgorithms.SHA256)]
+    [DataRow(NspSecurityAlgorithms.SHA384)]
+    [DataRow(NspSecurityAlgorithms.SHA512)]
+    public void ImportSignAndVerify(NspSecurityAlgorithms algorithms)
     {
         var firstEcDsaProvider = new NspECDsaProvider(algorithms);
         var publicKey = firstEcDsaProvider.GetBase64PublicKey(true);
@@ -85,10 +85,10 @@ public class ECDsaProviderTest
     /// 不使用Parameters，正常Pkcs8导出和导入，判断是否相等
     /// </summary>
     [TestMethod]
-    [DataRow(SecurityAlgorithms.SHA256)]
-    [DataRow(SecurityAlgorithms.SHA384)]
-    [DataRow(SecurityAlgorithms.SHA512)]
-    public void NoParametersImportExport(SecurityAlgorithms algorithms)
+    [DataRow(NspSecurityAlgorithms.SHA256)]
+    [DataRow(NspSecurityAlgorithms.SHA384)]
+    [DataRow(NspSecurityAlgorithms.SHA512)]
+    public void NoParametersImportExport(NspSecurityAlgorithms algorithms)
     {
         var firstEcDsaProvider = new NspECDsaProvider(algorithms);
         var publicKey = firstEcDsaProvider.GetBase64PublicKey();
@@ -106,10 +106,10 @@ public class ECDsaProviderTest
     /// 不使用Parameters，正常Pkcs8导出和导入，判断签名和校验是否正确
     /// </summary>
     [TestMethod]
-    [DataRow(SecurityAlgorithms.SHA256)]
-    [DataRow(SecurityAlgorithms.SHA384)]
-    [DataRow(SecurityAlgorithms.SHA512)]
-    public void NoParametersImportSignAndVerify(SecurityAlgorithms algorithms)
+    [DataRow(NspSecurityAlgorithms.SHA256)]
+    [DataRow(NspSecurityAlgorithms.SHA384)]
+    [DataRow(NspSecurityAlgorithms.SHA512)]
+    public void NoParametersImportSignAndVerify(NspSecurityAlgorithms algorithms)
     {
         var firstEcDsaProvider = new NspECDsaProvider(algorithms);
         var publicKey = firstEcDsaProvider.GetBase64PublicKey();

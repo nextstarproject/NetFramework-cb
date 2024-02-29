@@ -1,6 +1,6 @@
 ﻿namespace Nsp.Framework.Cryptography;
 
-public enum SecurityAlgorithms
+public enum NspSecurityAlgorithms
 {
     SHA256 = 1,
     SHA384 = 2,
