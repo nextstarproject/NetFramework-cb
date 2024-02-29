@@ -95,4 +95,14 @@ public static class StringConst
     /// </summary>
     public const string TempSecret256 =
         "Wz5obMfFrCsql5rbLvMTbWQsp65pN3ZiI0JR50nCj07Pomye9KpU2i9qADKemRJ9lGVBkwKJc1Kx8HchJ4blN2qMqrvXcnFejiJijncuaBChHMj5htY87XFXmwo8uuxHSDTazl4k3SIgsl2OR8dteZ4S3NiC2qpLxc1Id5a5QMgLWti9lUMYiFBvLORz8AXT2SoP5yQgB126ZAc3PAVDyWQMgHmAPnDAGEq3G3nvN5MVS86h6odjJFDzsXOsePiq";
+
+    /// <summary>
+    /// 临时密钥,测试密钥
+    /// </summary>
+    public const string TempSecret384 = "UnHh3L2lzjNrwkF1owmb6qsvYhU3Z9GzVFAF6R6phzyHl05StdLUZWoZ3ldaRBSUzpbIJe0wGHLhBe2w2IVbb4kkuponDxtFGdjeC6pxjZT9aZ1RPVtIcucLj2RGEarxcynlk5cCjalpiLMtODmeDTAcZ1yo3i2tqrfsUmEN9GI8SaDNupd43ssPNMzYUpmAt6RDrnkp8Rxr1lEBzRDdyA7l4uMEUhXwbkFA9WpkVgmeQOAS1VreaNAGZKxhNgDxu68Bzj4Bj1Ae1e6Ty3UiV6kouAfVDUdk9bvbUjE9T0iCqRzLqLtNmWFmGnB11FbiAkuOItxRC4StQuYwLQD1a8T1oa4XjjVNUHVtdSAwryMqnCT64MCzMkZR1wo8hti4";
+    
+    /// <summary>
+    /// 临时密钥,测试密钥
+    /// </summary>
+    public const string TempSecret512 = "v0rrcc9pdKT8GzDFlSAOAuYJqQstZ29LFppN1xKdZAKjH1IXr7XW7FRg27BTSS9T1QtGKfij24fP0Xw2Xfe6l8fZ8bvVgFNtuHPcls2s4RxXCodHjwaortDdXwkGn3HSUAdshp3tM9ZaeGAkteGkhS6o68XNTEQTlV3wg7hgb6GFbBD8s2JyeRqE8gkYARvwr12kkkkBopTVnTjT9WFWvf6guMtqaTEc2i4a6QNitRAWBpui4Nqx0g2hQNbJB6luTa4Xtw7Od0bSwkIO9NC51khC1F0RyGKQTDL1dAuuGpFSGcWmmzSQtTNr89h7El6hyquz15KgNLnNWb9I9TRnrZcf8QsLx3J7VRcz0dsAIaQDJd1js4uwaBGTN4Gc26qAGNuvEcyFEXqfMcxuDGn77Aq3XmoN0KygrnwVUjzXVE6GuZ0dMEyqFUcplrgLK37XxaHJw5Xm2H4yRhJMFYdoCnAW8583u6irrj0xK5MXbfdNozJr94586Np81TbP1uJV";
 }

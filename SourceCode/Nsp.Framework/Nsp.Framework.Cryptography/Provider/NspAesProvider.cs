@@ -49,14 +49,14 @@ public class NspAesProvider
         return roundtrip;
     }
 
-    static byte[] GenerateKey(string password)
+    private byte[] GenerateKey(string password)
     {
         var newPassword = password + StringConst.TempSecret32;
         var passwordBytes = Encoding.UTF8.GetBytes(newPassword);
         return passwordBytes[..16];
     }
 
-    static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
+    private byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
     {
         // Check arguments.
         if (plainText is not {Length: > 0})
@@ -97,7 +97,7 @@ public class NspAesProvider
         return encrypted;
     }
 
-    static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
+    private string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
     {
         // Check arguments.
         if (cipherText == null || cipherText.Length <= 0)

@@ -25,6 +25,11 @@ public class JwtService
         _signingCredentials = new SigningCredentials(ecDsaSecurity.ecDsaSecurityKey, ecDsaSecurity.ecdsaAlgorithms);
     }
     
+    public JwtService((SymmetricSecurityKey securityKey, string algorithms) security)
+    {
+        _signingCredentials = new SigningCredentials(security.securityKey, security.algorithms);
+    }
+    
     public JwtService(RsaSecurityKey rsaSecurityKey)
     {
         _signingCredentials = new SigningCredentials(rsaSecurityKey, SecurityAlgorithms.RsaSha256);
