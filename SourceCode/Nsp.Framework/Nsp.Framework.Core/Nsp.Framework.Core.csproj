@@ -13,6 +13,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageIcon>Resource\favicon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
