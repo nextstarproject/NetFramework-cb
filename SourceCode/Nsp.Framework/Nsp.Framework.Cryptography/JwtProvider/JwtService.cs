@@ -30,9 +30,9 @@ public class JwtService
         _signingCredentials = new SigningCredentials(rsaSecurityKey, SecurityAlgorithms.RsaSha256);
     }
     
-    public JwtService((RsaSecurityKey rsaSecurityKey, string rsaAlgorithms) rsaSecurity)
+    public JwtService(RsaSecurityKey rsaSecurityKey, string rsaAlgorithms)
     {
-        _signingCredentials = new SigningCredentials(rsaSecurity.rsaSecurityKey, rsaSecurity.rsaAlgorithms);
+        _signingCredentials = new SigningCredentials(rsaSecurityKey, rsaAlgorithms);
     }
     
     public JwtService(X509Certificate2 certificate)
@@ -69,6 +69,11 @@ public class JwtService
     public string GenerateToken(string subject, DateTime validFrom, DateTime validTo, string issuer, string audience,
         string uniqueIdentityId, Dictionary<string, string>? customClaimsDic = null)
     {
+        if (_signingCredentials == null && _certificate == null)
+        {
+            throw new ArgumentNullException(nameof(_signingCredentials)+nameof(_certificate), "must signingCredentials or certificate");
+        }
+        
         // 创建一些声明
         var claims = new[]
         {
@@ -126,8 +131,7 @@ public class JwtService
     public Dictionary<string, string> GetAllClaims(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var jsonToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
-        if (jsonToken is {Claims: not null})
+        if (tokenHandler.ReadToken(token) is JwtSecurityToken {Claims: not null} jsonToken)
         {
             // 获取所有的claims
             var claims = jsonToken.Claims;
@@ -141,6 +145,10 @@ public class JwtService
 
     private TokenValidationParameters GetTokenValidationParameters(string issuer, string audience)
     {
+        if (_signingCredentials == null && _certificate == null)
+        {
+            throw new ArgumentNullException(nameof(_signingCredentials)+nameof(_certificate), "must signingCredentials or certificate");
+        }
         var validationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -154,15 +162,4 @@ public class JwtService
         return validationParameters;
     }
     
-    static SigningCredentials ConvertToGenericCredentials(X509SigningCredentials x509Credentials)
-    {
-        // 从 X.509 凭据中提取密钥和算法信息
-        SecurityKey securityKey = x509Credentials.Key;
-        string algorithm = x509Credentials.Algorithm;
-
-        // 创建通用的 Signing Credentials
-        var genericCredentials = new SigningCredentials(securityKey, algorithm);
-
-        return genericCredentials;
-    }
 }
