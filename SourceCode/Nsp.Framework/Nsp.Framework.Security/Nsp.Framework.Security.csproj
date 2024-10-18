@@ -8,9 +8,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Nsp.Framework.Core\Nsp.Framework.Core.csproj" />
-      <ProjectReference Include="..\Nsp.Framework.Cryptography\Nsp.Framework.Cryptography.csproj" />
-      <ProjectReference Include="..\Nsp.Framework.Security\Nsp.Framework.Security.csproj" />
-      <ProjectReference Include="..\Nsp.Framework.Watermark\Nsp.Framework.Watermark.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.1.2" />
     </ItemGroup>
 
 </Project>
