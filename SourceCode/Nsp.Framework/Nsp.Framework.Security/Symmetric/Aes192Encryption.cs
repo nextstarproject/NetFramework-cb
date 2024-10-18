@@ -41,7 +41,7 @@ public class Aes192Encryption : IAesEncryption
     /// <param name="key">如果转换后长度超过，则截断，不足则补0</param>
     public Aes192Encryption(string key)
     {
-        _aesKey = GetBytes(key, KeyByteSize, nameof(key));
+        _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);
         _aesIv = RandomStringUtil.CreateRandomKey(KeyByteSize);
     }
 
@@ -52,19 +52,48 @@ public class Aes192Encryption : IAesEncryption
     /// <param name="iv">如果转换后长度超过，则截断，不足则补0</param>
     public Aes192Encryption(string key, string iv)
     {
-        _aesKey = GetBytes(key, KeyByteSize, nameof(key));
-        _aesIv = GetBytes(iv, KeyByteSize, nameof(iv));
+        _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);
+        _aesIv = SecurityUtil.GetBytes(iv, KeyByteSize);
     }
     
     public string Encrypt(string plainText)
     {
-        var encryptedBytes = Encrypt(Encoding.UTF8.GetBytes(plainText));
+        var plainBytes = Encoding.UTF8.GetBytes(plainText);
+        var encryptedBytes = Encrypt(plainBytes);
+        return Encoding.UTF8.GetString(encryptedBytes);
+    }
+    
+    public string Decrypt(string cipherText)
+    {
+        var cipherBytes = Encoding.UTF8.GetBytes(cipherText);
+        var decryptedBytes = Decrypt(cipherBytes);
+        return Encoding.UTF8.GetString(decryptedBytes);
+    }
+
+    public string EncryptHex(string plainText)
+    {
+        var plainBytes = Encoding.UTF8.GetBytes(plainText);
+        var encryptedBytes = Encrypt(plainBytes);
+        return SecurityUtil.BytesToHexString(encryptedBytes);
+    }
+
+    public string DecryptHex(string cipherHexText)
+    {
+        var cipherBytes = SecurityUtil.StringToByteArray(cipherHexText);
+        var decryptedBytes = Decrypt(cipherBytes);
+        return Encoding.UTF8.GetString(decryptedBytes);
+    }
+
+    public string EncryptBase64(string plainText)
+    {
+        var plainBytes = Encoding.UTF8.GetBytes(plainText);
+        var encryptedBytes = Encrypt(plainBytes);
         return Convert.ToBase64String(encryptedBytes);
     }
 
-    public string Decrypt(string cipherText)
+    public string DecryptBase64(string cipherBase64)
     {
-        var cipherBytes = Convert.FromBase64String(cipherText);
+        var cipherBytes = Convert.FromBase64String(cipherBase64);
         var decryptedBytes = Decrypt(cipherBytes);
         return Encoding.UTF8.GetString(decryptedBytes);
     }
@@ -111,27 +140,4 @@ public class Aes192Encryption : IAesEncryption
             }
         }
     }
-
-    #region Private Method
-    private byte[] GetBytes(string input, int length, string paramName)
-    {
-        byte[] bytes = Encoding.UTF8.GetBytes(input);
-
-        if (bytes.Length < length)
-        {
-            Array.Resize(ref bytes, length);
-            for (int i = bytes.Length; i < length; i++)
-            {
-                bytes[i] = 0; // 用 0 字符填充
-            }
-        }
-        else if (bytes.Length > length)
-        {
-            Array.Resize(ref bytes, length); // 截断多余部分
-        }
-
-        return bytes;
-    }
-    
-    #endregion
 }

@@ -42,7 +42,7 @@ public class Aes192CbcHmacSha384 : IAesCbcHmacSha
     /// <param name="aesKey">如果转换后长度超过，则截断，不足则补0</param>
     public Aes192CbcHmacSha384(string aesKey)
     {
-        _aesKey = GetBytes(aesKey, KeyByteSize, nameof(aesKey));
+        _aesKey = SecurityUtil.GetBytes(aesKey, KeyByteSize);
         _hmacKey = RandomStringUtil.CreateRandomKey(HmacKeyByteSize);
     }
 
@@ -53,27 +53,52 @@ public class Aes192CbcHmacSha384 : IAesCbcHmacSha
     /// <param name="hmacKey">如果转换后长度超过，则截断，不足则补0</param>
     public Aes192CbcHmacSha384(string aesKey, string hmacKey)
     {
-        _aesKey = GetBytes(aesKey, KeyByteSize, nameof(aesKey));
-        _hmacKey = GetBytes(hmacKey, HmacKeyByteSize, nameof(hmacKey));
+        _aesKey = SecurityUtil.GetBytes(aesKey, KeyByteSize);
+        _hmacKey = SecurityUtil.GetBytes(hmacKey, HmacKeyByteSize);
     }
     
-    // 支持字符串的 Encrypt
     public string Encrypt(string plainText)
+    {
+        var plainBytes = Encoding.UTF8.GetBytes(plainText);
+        var encryptedBytes = Encrypt(plainBytes);
+        return Encoding.UTF8.GetString(encryptedBytes);
+    }
+    
+    public string Decrypt(string cipherText)
+    {
+        var cipherBytes = Encoding.UTF8.GetBytes(cipherText);
+        var decryptedBytes = Decrypt(cipherBytes);
+        return Encoding.UTF8.GetString(decryptedBytes);
+    }
+
+    public string EncryptHex(string plainText)
+    {
+        var plainBytes = Encoding.UTF8.GetBytes(plainText);
+        var encryptedBytes = Encrypt(plainBytes);
+        return SecurityUtil.BytesToHexString(encryptedBytes);
+    }
+
+    public string DecryptHex(string cipherHexText)
+    {
+        var cipherBytes = SecurityUtil.StringToByteArray(cipherHexText);
+        var decryptedBytes = Decrypt(cipherBytes);
+        return Encoding.UTF8.GetString(decryptedBytes);
+    }
+
+    public string EncryptBase64(string plainText)
     {
         var plainBytes = Encoding.UTF8.GetBytes(plainText);
         var encryptedBytes = Encrypt(plainBytes);
         return Convert.ToBase64String(encryptedBytes);
     }
-    
-    // 支持字符串的 Decrypt
-    public string Decrypt(string cipherText)
+
+    public string DecryptBase64(string cipherBase64)
     {
-        var cipherBytes = Convert.FromBase64String(cipherText);
+        var cipherBytes = Convert.FromBase64String(cipherBase64);
         var decryptedBytes = Decrypt(cipherBytes);
         return Encoding.UTF8.GetString(decryptedBytes);
     }
-    
-    // 重载 Encrypt 支持 byte[]
+
     public byte[] Encrypt(byte[] plainBytes)
     {
         using (var aesAlg = Aes.Create())
@@ -109,7 +134,6 @@ public class Aes192CbcHmacSha384 : IAesCbcHmacSha
         }
     }
 
-    // 重载 Decrypt 支持 byte[]
     public byte[] Decrypt(byte[] cipherBytes)
     {
         using (var aesAlg = Aes.Create())
@@ -152,25 +176,5 @@ public class Aes192CbcHmacSha384 : IAesCbcHmacSha
                 return resultStream.ToArray();
             }
         }
-    }
-
-    private byte[] GetBytes(string input, int length, string paramName)
-    {
-        byte[] bytes = Encoding.UTF8.GetBytes(input);
-
-        if (bytes.Length < length)
-        {
-            Array.Resize(ref bytes, length);
-            for (int i = bytes.Length; i < length; i++)
-            {
-                bytes[i] = 0; // 用 0 字符填充
-            }
-        }
-        else if (bytes.Length > length)
-        {
-            Array.Resize(ref bytes, length); // 截断多余部分
-        }
-
-        return bytes;
     }
 }
