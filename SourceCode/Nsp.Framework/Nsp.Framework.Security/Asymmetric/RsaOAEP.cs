@@ -2,8 +2,22 @@
 
 namespace Nsp.Framework.Security.Asymmetric;
 
+/// <summary>
+/// 默认使用 <see cref="RSAEncryptionPadding.OaepSHA256"/> 来填充
+/// </summary>
 public class RsaOAEP : RsaProvider, IRsaAsymmetricAlgorithm
 {
+    /// <summary>
+    /// 请使用以下几个填充方式之一
+    /// <para><see cref="RSAEncryptionPadding.OaepSHA1"/></para>
+    /// <para><see cref="RSAEncryptionPadding.OaepSHA256"/></para>
+    /// <para><see cref="RSAEncryptionPadding.OaepSHA384"/></para>
+    /// <para><see cref="RSAEncryptionPadding.OaepSHA512"/></para>
+    /// <para><see cref="RSAEncryptionPadding.OaepSHA3_256"/></para>
+    /// <para><see cref="RSAEncryptionPadding.OaepSHA3_384"/></para>
+    /// <para><see cref="RSAEncryptionPadding.OaepSHA3_512"/></para>
+    /// </summary>
+    public RSAEncryptionPadding Padding { get; set; } = RSAEncryptionPadding.OaepSHA256;
     public RsaOAEP(int size = 2048) : base(size)
     {
     }
@@ -61,11 +75,11 @@ public class RsaOAEP : RsaProvider, IRsaAsymmetricAlgorithm
 
     public byte[] Encrypt(byte[] plainBytes)
     {
-        return _rsa.Encrypt(plainBytes, RSAEncryptionPadding.OaepSHA256);
+        return _rsa.Encrypt(plainBytes, Padding);
     }
 
     public byte[] Decrypt(byte[] cipherBytes)
     {
-        return _rsa.Decrypt(cipherBytes, RSAEncryptionPadding.OaepSHA256);
+        return _rsa.Decrypt(cipherBytes, Padding);
     }
 }
