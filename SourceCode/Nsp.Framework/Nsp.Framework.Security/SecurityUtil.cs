@@ -19,7 +19,7 @@ public static class SecurityUtil
     /// </summary>
     /// <param name="hex"></param>
     /// <returns></returns>
-    public static byte[] StringToByteArray(string hex)
+    public static byte[] HexStringToByte(string hex)
     {
         var length = hex.Length;
         var bytes = new byte[length / 2];

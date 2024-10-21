@@ -9,6 +9,8 @@ public class Aes128Gcm : IAesGcm
     
     public byte[] AesKey => _aesKey;
     public string AesKeyString => Encoding.UTF8.GetString(_aesKey);
+    public string AesKeyHex => SecurityUtil.BytesToHexString(_aesKey);
+    public string AesKeyBase64 => Convert.ToBase64String(_aesKey);
     
     public int NonceByteSize => 96 / 8; // 96-bit nonce for GCM
     public int TagByteSize => 128 / 8;   // 128-bit authentication tag
@@ -45,28 +47,28 @@ public class Aes128Gcm : IAesGcm
         return Encoding.UTF8.GetString(decryptedBytes);
     }
 
-    public string EncryptHex(string plainText)
+    public string EncryptToHex(string plainText)
     {
         var plainBytes = Encoding.UTF8.GetBytes(plainText);
         var encryptedBytes = Encrypt(plainBytes);
         return SecurityUtil.BytesToHexString(encryptedBytes);
     }
 
-    public string DecryptHex(string cipherHexText)
+    public string DecryptFromHex(string cipherHexText)
     {
-        var cipherBytes = SecurityUtil.StringToByteArray(cipherHexText);
+        var cipherBytes = SecurityUtil.HexStringToByte(cipherHexText);
         var decryptedBytes = Decrypt(cipherBytes);
         return Encoding.UTF8.GetString(decryptedBytes);
     }
 
-    public string EncryptBase64(string plainText)
+    public string EncryptToBase64(string plainText)
     {
         var plainBytes = Encoding.UTF8.GetBytes(plainText);
         var encryptedBytes = Encrypt(plainBytes);
         return Convert.ToBase64String(encryptedBytes);
     }
 
-    public string DecryptBase64(string cipherBase64)
+    public string DecryptFromBase64(string cipherBase64)
     {
         var cipherBytes = Convert.FromBase64String(cipherBase64);
         var decryptedBytes = Decrypt(cipherBytes);

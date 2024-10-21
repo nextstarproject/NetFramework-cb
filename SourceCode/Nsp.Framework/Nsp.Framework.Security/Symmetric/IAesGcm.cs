@@ -12,6 +12,8 @@ public interface IAesGcm : ISymmetricAlgorithm
     public int KeyByteSize { get; }
     public byte[] AesKey { get; }
     public string AesKeyString { get; }
+    public string AesKeyHex { get; }
+    public string AesKeyBase64 { get; }
     /// <summary>
     /// 默认始终为 96 / 8 = 12 字节
     /// </summary>

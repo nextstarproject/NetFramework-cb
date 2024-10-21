@@ -1,0 +1,75 @@
+﻿using System.Text;
+
+namespace Nsp.Framework.Security.Asymmetric;
+
+public interface IRsaProvider
+{
+    RSACryptoServiceProvider Rsa { get; }
+    string ExportPublicToPem();
+    string ExportPrivateToPem();
+    string ExportPublicToBase64();
+    string ExportPrivateToBase64();
+    string ExportXmlPublicAndPrivate(bool isIncludePrivate = true);
+
+    static IReadOnlyCollection<int> KeySizeCollection => new List<int>() {1024, 2048, 3072, 4096}.AsReadOnly();
+
+    public static RSACryptoServiceProvider Create(int size = 2048)
+    {
+        var rsa = new RSACryptoServiceProvider(size);
+        return rsa;
+    }
+
+    public static string ExportPublicToBase64([NotNull] RSACryptoServiceProvider rsa)
+    {
+        ArgumentNullException.ThrowIfNull(rsa);
+        var privateKey = rsa.ExportSubjectPublicKeyInfo();
+        var privateKeyString = Convert.ToBase64String(privateKey);
+        return privateKeyString;
+    }
+
+    public static string ExportPrivateToBase64([NotNull] RSACryptoServiceProvider rsa)
+    {
+        ArgumentNullException.ThrowIfNull(rsa);
+        var privateKey = rsa.ExportPkcs8PrivateKey();
+        var privateKeyString = Convert.ToBase64String(privateKey);
+        return privateKeyString;
+    }
+
+    public static string ExportPublicKeyToPem([NotNull] RSACryptoServiceProvider rsa)
+    {
+        ArgumentNullException.ThrowIfNull(rsa);
+        var publicKeyBytes = rsa.ExportSubjectPublicKeyInfo();
+        return ConvertToPem(publicKeyBytes, true);
+    }
+
+    public static string ExportPrivateKeyToPem([NotNull] RSACryptoServiceProvider rsa)
+    {
+        ArgumentNullException.ThrowIfNull(rsa);
+        var privateKeyBytes = rsa.ExportPkcs8PrivateKey();
+        return ConvertToPem(privateKeyBytes, false);
+    }
+
+    public static string ExportXmlPublicAndPrivate([NotNull] RSACryptoServiceProvider rsa, bool isIncludePrivate = true)
+    {
+        ArgumentNullException.ThrowIfNull(rsa);
+        // 获取XML格式的私钥和公钥
+        var privateKeyAndPublicKeyXml = rsa.ToXmlString(isIncludePrivate);
+        return privateKeyAndPublicKeyXml;
+    }
+
+    public static string ConvertToPem(byte[] keyBytes, bool isPublic)
+    {
+        var base64Key = Convert.ToBase64String(keyBytes);
+        var sb = new StringBuilder();
+        sb.AppendLine(isPublic ? IAsymmetricAlgorithm.BeginPublicKey : IAsymmetricAlgorithm.BeginPrivateKey);
+
+        for (int i = 0; i < base64Key.Length; i += 64)
+        {
+            sb.AppendLine(base64Key.Substring(i, Math.Min(64, base64Key.Length - i)));
+        }
+
+        sb.AppendLine(isPublic ? IAsymmetricAlgorithm.EndPublicKey : IAsymmetricAlgorithm.EndPrivateKey);
+
+        return sb.ToString();
+    }
+}

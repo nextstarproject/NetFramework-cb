@@ -1,18 +1,20 @@
 ﻿using System.Text;
 
-namespace Nsp.Framework.Security.Hashing;
+namespace Nsp.Framework.Security.Mac;
 
-public class Hmac384Hashing : IHmacHashingAlgorithm
+public class HmacSha256 : IHmacShaAlgorithm
 {
-    public int KeyBitSize => 384;
+    public int KeyBitSize => 256;
     public int KeyByteSize => KeyBitSize / 8;
 
     public byte[] HmacKey => _hmacKey;
     public string HmacKeyString => Encoding.UTF8.GetString(_hmacKey);
+    public string HmacKeyHex => SecurityUtil.BytesToHexString(_hmacKey);
+    public string HmacKeyBase64 => Convert.ToBase64String(_hmacKey);
 
     private readonly byte[] _hmacKey;
 
-    public Hmac384Hashing(byte[] key)
+    public HmacSha256(byte[] key)
     {
         if (key.Length != KeyByteSize)
             throw new ArgumentException($"Key must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(key));
@@ -23,9 +25,9 @@ public class Hmac384Hashing : IHmacHashingAlgorithm
     /// 
     /// </summary>
     /// <param name="key">如果转换后长度超过，则截断，不足则补0</param>
-    public Hmac384Hashing(string key)
+    public HmacSha256(string key)
     {
-        _hmacKey = GetBytes(key, KeyByteSize, nameof(key));
+        _hmacKey = SecurityUtil.GetBytes(key, KeyByteSize);
     }
 
     public string Encrypt(string plainText)
@@ -41,13 +43,26 @@ public class Hmac384Hashing : IHmacHashingAlgorithm
         return Compare(textBytes, hmacBytes);
     }
 
-    public string EncryptBase64(string plainText)
+    public string EncryptToHex(string plainText)
+    {
+        var bytes = Encoding.UTF8.GetBytes(plainText);
+        return SecurityUtil.BytesToHexString(Encrypt(bytes));
+    }
+
+    public bool CompareFromHex(string plainText, string hexText)
+    {
+        var textBytes = Convert.FromBase64String(plainText);
+        var hmacBytes = SecurityUtil.HexStringToByte(hexText);
+        return Compare(textBytes, hmacBytes);
+    }
+
+    public string EncryptToBase64(string plainText)
     {
         var bytes = Encoding.UTF8.GetBytes(plainText);
         return Convert.ToBase64String(Encrypt(bytes));
     }
 
-    public bool CompareBase64(string plainText, string base64Text)
+    public bool CompareFromBase64(string plainText, string base64Text)
     {
         var textBytes = Convert.FromBase64String(plainText);
         var hmacBytes = Convert.FromBase64String(base64Text);
@@ -68,28 +83,4 @@ public class Hmac384Hashing : IHmacHashingAlgorithm
         var computedHmac = Encrypt(plainBytes);
         return computedHmac.SequenceEqual(hmacBytes);
     }
-
-    #region Private Method
-
-    private byte[] GetBytes(string input, int length, string paramName)
-    {
-        byte[] bytes = Encoding.UTF8.GetBytes(input);
-
-        if (bytes.Length < length)
-        {
-            Array.Resize(ref bytes, length);
-            for (int i = bytes.Length; i < length; i++)
-            {
-                bytes[i] = 0; // 用 0 字符填充
-            }
-        }
-        else if (bytes.Length > length)
-        {
-            Array.Resize(ref bytes, length); // 截断多余部分
-        }
-
-        return bytes;
-    }
-
-    #endregion
 }

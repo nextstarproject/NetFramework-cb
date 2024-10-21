@@ -21,5 +21,9 @@ public interface IAesCbcHmacSha : ISymmetricAlgorithm
     public byte[] AesKey { get; }
     public byte[] HmacKey { get; }
     public string AesKeyString { get; }
+    public string AesKeyHex { get; }
+    public string AesKeyBase64 { get; }
     public string HmacKeyString { get; }
+    public string HmacKeyHex { get; }
+    public string HmacKeyBase64 { get; }
 }

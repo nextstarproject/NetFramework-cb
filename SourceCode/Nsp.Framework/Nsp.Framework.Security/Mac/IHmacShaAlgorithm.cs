@@ -1,6 +1,6 @@
-﻿namespace Nsp.Framework.Security.Hashing;
+﻿namespace Nsp.Framework.Security.Mac;
 
-public interface IHmacHashingAlgorithm : IHashingAlgorithm
+public interface IHmacShaAlgorithm : IMacAlgorithm
 {
     /// <summary>
     /// Hmac 位数
@@ -12,4 +12,6 @@ public interface IHmacHashingAlgorithm : IHashingAlgorithm
     public int KeyByteSize { get; }
     public byte[] HmacKey { get; }
     public string HmacKeyString { get; }
+    public string HmacKeyHex { get; }
+    public string HmacKeyBase64 { get; }
 }
