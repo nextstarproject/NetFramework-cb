@@ -79,6 +79,10 @@ public class NspECDsaProvider : IDisposable
     {
         if (isParameters)
         {
+            _ecDsa.ExportSubjectPublicKeyInfo();
+            _ecDsa.ExportPkcs8PrivateKey();
+            _ecDsa.ExportSubjectPublicKeyInfoPem();
+            _ecDsa.ExportPkcs8PrivateKeyPem();
             ArgumentNullException.ThrowIfNull(_ecDsa);
             var ecParameters = _ecDsa.ExportParameters(true);
             return Convert.ToBase64String(ecParameters.D);

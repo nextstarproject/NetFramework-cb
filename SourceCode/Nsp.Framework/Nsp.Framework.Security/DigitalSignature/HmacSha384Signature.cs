@@ -1,11 +1,13 @@
-﻿namespace Nsp.Framework.Security.Mac;
+﻿using Nsp.Framework.Security.Mac;
+
+namespace Nsp.Framework.Security.DigitalSignature;
 
 /// <summary>
-/// 和 <see cref="HmacSha256"/> 一致，后续可能多函数
+/// 和 <see cref="HmacSha384"/> 一致，后续可能多函数
 /// </summary>
-public class HmacSha256Signature : HmacSha256, IHmacShaSignature
+public class HmacSha384Signature : HmacSha384, IHmacShaSignatureAlgorithm
 {
-    public HmacSha256Signature(byte[] key) : base(key)
+    public HmacSha384Signature(byte[] key) : base(key)
     {
     }
 
@@ -13,18 +15,18 @@ public class HmacSha256Signature : HmacSha256, IHmacShaSignature
     /// 
     /// </summary>
     /// <param name="key">如果转换后长度超过，则截断，不足则补0</param>
-    public HmacSha256Signature(string key) : base(key)
+    public HmacSha384Signature(string key) : base(key)
     {
     }
-
+    
     public string GenerateSignature(string plainText)
     {
         return base.Encrypt(plainText);
     }
 
-    public bool VerifySignature(string plainText, string hmacText)
+    public bool VerifySignature(string plainText, string signatureText)
     {
-        return base.Compare(plainText, hmacText);
+        return base.Compare(plainText, signatureText);
     }
 
     public string GenerateSignatureToHex(string plainText)
@@ -45,5 +47,15 @@ public class HmacSha256Signature : HmacSha256, IHmacShaSignature
     public bool VerifySignatureFromBase64(string plainText, string base64Text)
     {
         return base.CompareFromBase64(plainText, base64Text);
+    }
+    
+    public byte[] GenerateSignature(byte[] plainBytes)
+    {
+        return base.Encrypt(plainBytes);
+    }
+
+    public bool VerifySignature(byte[] plainBytes, byte[] signatureBytes)
+    {
+        return base.Compare(plainBytes, signatureBytes);
     }
 }

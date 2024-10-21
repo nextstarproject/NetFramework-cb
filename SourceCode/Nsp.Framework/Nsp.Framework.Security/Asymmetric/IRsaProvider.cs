@@ -10,6 +10,8 @@ public interface IRsaProvider
     string ExportPublicToBase64();
     string ExportPrivateToBase64();
     string ExportXmlPublicAndPrivate(bool isIncludePrivate = true);
+    NspRsaKey ExportPublicAndPrivateToBase64();
+    RsaSecurityKey ExportSecurityKey(string? keyId = null);
 
     static IReadOnlyCollection<int> KeySizeCollection => new List<int>() {1024, 2048, 3072, 4096}.AsReadOnly();
 
@@ -22,9 +24,9 @@ public interface IRsaProvider
     public static string ExportPublicToBase64([NotNull] RSACryptoServiceProvider rsa)
     {
         ArgumentNullException.ThrowIfNull(rsa);
-        var privateKey = rsa.ExportSubjectPublicKeyInfo();
-        var privateKeyString = Convert.ToBase64String(privateKey);
-        return privateKeyString;
+        var publicKey = rsa.ExportSubjectPublicKeyInfo();
+        var publicKeyString = Convert.ToBase64String(publicKey);
+        return publicKeyString;
     }
 
     public static string ExportPrivateToBase64([NotNull] RSACryptoServiceProvider rsa)

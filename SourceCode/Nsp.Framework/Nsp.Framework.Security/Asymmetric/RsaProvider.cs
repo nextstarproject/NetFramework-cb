@@ -1,6 +1,6 @@
 ﻿namespace Nsp.Framework.Security.Asymmetric;
 
-public class RsaProvider : IRsaProvider,IDisposable
+public class RsaProvider : IRsaProvider, IDisposable
 {
     public RSACryptoServiceProvider Rsa => _rsa;
     protected readonly int _size;
@@ -11,14 +11,14 @@ public class RsaProvider : IRsaProvider,IDisposable
         if (IRsaProvider.KeySizeCollection.Contains(size))
         {
             _size = size;
-            _rsa = IRsaProvider.Create(size);
+            _rsa = IRsaProvider.Create(_size);
         }
         else
         {
             throw new ArgumentException("size must 1024,2048,3072,4096", nameof(size));
         }
     }
-    
+
     public RsaProvider(string xmlPrivateAndPublic)
     {
         var rsa = new RSACryptoServiceProvider();
@@ -36,15 +36,15 @@ public class RsaProvider : IRsaProvider,IDisposable
         rsaPrivate.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
         _rsa = rsa;
     }
-    
+
     public string ExportPublicToPem()
     {
-        return IRsaProvider.ExportPublicKeyToPem(_rsa);
+        return _rsa.ExportSubjectPublicKeyInfoPem();
     }
 
     public string ExportPrivateToPem()
     {
-        return IRsaProvider.ExportPrivateKeyToPem(_rsa);
+        return _rsa.ExportPkcs8PrivateKeyPem();
     }
 
     public string ExportPublicToBase64()
@@ -61,7 +61,26 @@ public class RsaProvider : IRsaProvider,IDisposable
     {
         return IRsaProvider.ExportXmlPublicAndPrivate(_rsa, isIncludePrivate);
     }
-    
+
+    public NspRsaKey ExportPublicAndPrivateToBase64()
+    {
+        return new NspRsaKey()
+        {
+            PublicKey = ExportPublicToBase64(),
+            PrivateKey = ExportPrivateToBase64()
+        };
+    }
+
+    public RsaSecurityKey ExportSecurityKey(string? keyId = null)
+    {
+        ArgumentNullException.ThrowIfNull(_rsa);
+        var rsaSecurityKey = new RsaSecurityKey(_rsa.ExportParameters(true))
+        {
+            KeyId = keyId ?? Guid.NewGuid().ToString()
+        };
+        return rsaSecurityKey;
+    }
+
     public void Dispose()
     {
         _rsa?.Dispose();
