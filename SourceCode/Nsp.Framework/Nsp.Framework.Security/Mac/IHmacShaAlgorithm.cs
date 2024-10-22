@@ -11,7 +11,4 @@ public interface IHmacShaAlgorithm : IMacAlgorithm
     /// </summary>
     public int KeyByteSize { get; }
     public byte[] HmacKey { get; }
-    public string HmacKeyString { get; }
-    public string HmacKeyHex { get; }
-    public string HmacKeyBase64 { get; }
 }

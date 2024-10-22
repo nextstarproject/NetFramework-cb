@@ -33,11 +33,18 @@ public class EcDsaProvider : IEcDsaProvider
 
     public EcDsaProvider(string base64PrivateKey, string base64PublicKey)
     {
-        var privateKeyBytes = Convert.FromBase64String(base64PrivateKey);
-        var publicKeyBytes = Convert.FromBase64String(base64PublicKey);
         var ecdsa = ECDsa.Create();
-        ecdsa.ImportPkcs8PrivateKey(privateKeyBytes, out _);
-        ecdsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
+        if (!string.IsNullOrWhiteSpace(base64PublicKey))
+        {
+            var publicKeyBytes = Convert.FromBase64String(base64PublicKey);
+            ecdsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
+        }
+        
+        if (!string.IsNullOrWhiteSpace(base64PrivateKey))
+        {
+            var privateKeyBytes = Convert.FromBase64String(base64PrivateKey);
+            ecdsa.ImportPkcs8PrivateKey(privateKeyBytes, out _);
+        }
         _ecDsa = ecdsa;
     }
     

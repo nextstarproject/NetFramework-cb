@@ -15,6 +15,10 @@ public class RsaSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, ISigna
     public RsaSha512Signature(string xmlPrivateAndPublic) : base(xmlPrivateAndPublic)
     {
     }
+    
+    public RsaSha512Signature(RSAParameters rsaParameters) : base(rsaParameters)
+    {
+    }
 
     public RsaSha512Signature(string base64PrivateKey, string base64PublicKey) : base(base64PrivateKey, base64PublicKey)
     {

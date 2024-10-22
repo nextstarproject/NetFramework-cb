@@ -15,7 +15,11 @@ public class RsaSha256Signature : RsaProvider, IRsaShaSignatureAlgorithm, ISigna
     public RsaSha256Signature(string xmlPrivateAndPublic) : base(xmlPrivateAndPublic)
     {
     }
-
+    
+    public RsaSha256Signature(RSAParameters rsaParameters) : base(rsaParameters)
+    {
+    }
+    
     public RsaSha256Signature(string base64PrivateKey, string base64PublicKey) : base(base64PrivateKey, base64PublicKey)
     {
     }

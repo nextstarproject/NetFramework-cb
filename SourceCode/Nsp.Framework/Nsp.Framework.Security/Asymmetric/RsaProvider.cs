@@ -1,10 +1,13 @@
 ﻿namespace Nsp.Framework.Security.Asymmetric;
 
+/// <summary>
+/// 请使用 <see cref="RsaPKCS1"/> 或者 <see cref="RsaOAEP"/>
+/// </summary>
 public class RsaProvider : IRsaProvider, IDisposable
 {
-    public RSACryptoServiceProvider Rsa => _rsa;
+    public RSA Rsa => _rsa;
     protected readonly int _size;
-    protected readonly RSACryptoServiceProvider _rsa;
+    protected readonly RSA _rsa;
 
     public RsaProvider(int size = 2048)
     {
@@ -21,18 +24,33 @@ public class RsaProvider : IRsaProvider, IDisposable
 
     public RsaProvider(string xmlPrivateAndPublic)
     {
-        var rsa = new RSACryptoServiceProvider();
+        var rsa = RSA.Create();
         rsa.FromXmlString(xmlPrivateAndPublic);
+        _rsa = rsa;
+    }
+    
+    public RsaProvider(RSAParameters rsaParameters)
+    {
+        var rsa = RSA.Create();
+        rsa.ImportParameters(rsaParameters);
         _rsa = rsa;
     }
 
     public RsaProvider(string base64PrivateKey, string base64PublicKey)
     {
-        var privateKeyBytes = Convert.FromBase64String(base64PrivateKey);
-        var publicKeyBytes = Convert.FromBase64String(base64PublicKey);
-        var rsa = new RSACryptoServiceProvider();
-        rsa.ImportPkcs8PrivateKey(privateKeyBytes, out _);
-        rsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
+        var rsa = RSA.Create();
+        if (!string.IsNullOrWhiteSpace(base64PublicKey))
+        {
+            var publicKeyBytes = Convert.FromBase64String(base64PublicKey);
+            rsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
+        }
+        
+        if (!string.IsNullOrWhiteSpace(base64PrivateKey))
+        {
+            var privateKeyBytes = Convert.FromBase64String(base64PrivateKey);
+            rsa.ImportPkcs8PrivateKey(privateKeyBytes, out _);
+        }
+        
         _rsa = rsa;
     }
 
@@ -68,6 +86,11 @@ public class RsaProvider : IRsaProvider, IDisposable
             PublicKey = ExportPublicToBase64(),
             PrivateKey = ExportPrivateToBase64()
         };
+    }
+    
+    public RSAParameters ExportParameters(bool includePrivateParameters = true)
+    {
+        return _rsa.ExportParameters(includePrivateParameters);
     }
 
     public RsaSecurityKey ExportSecurityKey(string? keyId = null)

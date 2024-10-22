@@ -11,6 +11,10 @@ public class RsaPKCS1 : RsaProvider, IRsaAsymmetricAlgorithm
     public RsaPKCS1(string xmlPrivateAndPublic) : base(xmlPrivateAndPublic)
     {
     }
+    
+    public RsaPKCS1(RSAParameters rsaParameters) : base(rsaParameters)
+    {
+    }
 
     public RsaPKCS1(string base64PrivateKey, string base64PublicKey) : base(base64PrivateKey, base64PublicKey)
     {

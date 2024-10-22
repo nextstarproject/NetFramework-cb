@@ -15,6 +15,10 @@ public class RsaSsaPssSha384Signature : RsaProvider, IRsaShaSignatureAlgorithm, 
     public RsaSsaPssSha384Signature(string xmlPrivateAndPublic) : base(xmlPrivateAndPublic)
     {
     }
+    
+    public RsaSsaPssSha384Signature(RSAParameters rsaParameters) : base(rsaParameters)
+    {
+    }
 
     public RsaSsaPssSha384Signature(string base64PrivateKey, string base64PublicKey) : base(base64PrivateKey, base64PublicKey)
     {

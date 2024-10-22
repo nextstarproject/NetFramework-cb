@@ -25,6 +25,10 @@ public class RsaOAEP : RsaProvider, IRsaAsymmetricAlgorithm
     public RsaOAEP(string xmlPrivateAndPublic) : base(xmlPrivateAndPublic)
     {
     }
+    
+    public RsaOAEP(RSAParameters rsaParameters) : base(rsaParameters)
+    {
+    }
 
     public RsaOAEP(string base64PrivateKey, string base64PublicKey) : base(base64PrivateKey, base64PublicKey)
     {

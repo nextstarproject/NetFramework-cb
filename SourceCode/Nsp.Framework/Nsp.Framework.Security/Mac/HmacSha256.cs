@@ -8,9 +8,6 @@ public class HmacSha256 : IHmacShaAlgorithm
     public int KeyByteSize => KeyBitSize / 8;
 
     public byte[] HmacKey => _hmacKey;
-    public string HmacKeyString => Encoding.UTF8.GetString(_hmacKey);
-    public string HmacKeyHex => SecurityUtil.BytesToHexString(_hmacKey);
-    public string HmacKeyBase64 => Convert.ToBase64String(_hmacKey);
 
     private readonly byte[] _hmacKey;
 
@@ -51,7 +48,7 @@ public class HmacSha256 : IHmacShaAlgorithm
 
     public bool CompareFromHex(string plainText, string hexText)
     {
-        var textBytes = Convert.FromBase64String(plainText);
+        var textBytes = Encoding.UTF8.GetBytes(plainText);
         var hmacBytes = SecurityUtil.HexStringToByte(hexText);
         return Compare(textBytes, hmacBytes);
     }
@@ -64,7 +61,7 @@ public class HmacSha256 : IHmacShaAlgorithm
 
     public bool CompareFromBase64(string plainText, string base64Text)
     {
-        var textBytes = Convert.FromBase64String(plainText);
+        var textBytes = Encoding.UTF8.GetBytes(plainText);
         var hmacBytes = Convert.FromBase64String(base64Text);
         return Compare(textBytes, hmacBytes);
     }
