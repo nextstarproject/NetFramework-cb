@@ -45,7 +45,7 @@ public class RsaSsaPssSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, 
 
     public bool VerifySignatureFromHex(string plainText, string hexText)
     {
-        var textBytes = Convert.FromBase64String(plainText);
+        var textBytes = Encoding.UTF8.GetBytes(plainText);
         var signatureBytes = SecurityUtil.HexStringToByte(hexText);
         return VerifySignature(textBytes, signatureBytes);
     }
@@ -58,7 +58,7 @@ public class RsaSsaPssSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, 
 
     public bool VerifySignatureFromBase64(string plainText, string base64Text)
     {
-        var textBytes = Convert.FromBase64String(plainText);
+        var textBytes = Encoding.UTF8.GetBytes(plainText);
         var signatureBytes = Convert.FromBase64String(base64Text);
         return VerifySignature(textBytes, signatureBytes);
     }

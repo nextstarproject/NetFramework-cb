@@ -11,7 +11,7 @@ public interface IEcDsaProvider
     string ExportPrivateToPem();
     string ExportPublicToBase64();
     string ExportPrivateToBase64();
-    ECParameters ExportPublicAndPrivateToBase64(bool isIncludePrivateKey = true);
+    ECParameters ExportParameters(bool isIncludePrivateKey = true);
 
     public static ECDsa Create(ECCurve curve)
     {
