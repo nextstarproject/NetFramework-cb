@@ -10,7 +10,7 @@ public interface IRsaProvider
     string ExportPublicToBase64();
     string ExportPrivateToBase64();
     string ExportXmlPublicAndPrivate(bool isIncludePrivate = true);
-    NspRsaKey ExportPublicAndPrivateToBase64();
+    AsymmetricKey ExportPublicAndPrivateToBase64();
     RsaSecurityKey ExportSecurityKey(string? keyId = null);
 
     static IReadOnlyCollection<int> KeySizeCollection => new List<int>() {1024, 2048, 3072, 4096}.AsReadOnly();

@@ -29,11 +29,10 @@ public class RsaProvider : IRsaProvider, IDisposable
     public RsaProvider(string base64PrivateKey, string base64PublicKey)
     {
         var privateKeyBytes = Convert.FromBase64String(base64PrivateKey);
-        var rsaPrivate = new RSACryptoServiceProvider();
         var publicKeyBytes = Convert.FromBase64String(base64PublicKey);
         var rsa = new RSACryptoServiceProvider();
-        rsaPrivate.ImportPkcs8PrivateKey(privateKeyBytes, out _);
-        rsaPrivate.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
+        rsa.ImportPkcs8PrivateKey(privateKeyBytes, out _);
+        rsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
         _rsa = rsa;
     }
 
@@ -62,9 +61,9 @@ public class RsaProvider : IRsaProvider, IDisposable
         return IRsaProvider.ExportXmlPublicAndPrivate(_rsa, isIncludePrivate);
     }
 
-    public NspRsaKey ExportPublicAndPrivateToBase64()
+    public AsymmetricKey ExportPublicAndPrivateToBase64()
     {
-        return new NspRsaKey()
+        return new AsymmetricKey()
         {
             PublicKey = ExportPublicToBase64(),
             PrivateKey = ExportPrivateToBase64()

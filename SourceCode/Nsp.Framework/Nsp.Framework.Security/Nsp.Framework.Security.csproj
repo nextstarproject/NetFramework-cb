@@ -4,6 +4,13 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Title>Nsp.Framework.Security</Title>
+        <Authors>nextstarproject</Authors>
+        <Description>Extract some cryptography for signing and verification, as well as encryption and decryption, jwt
+sverification and signing.</Description>
+        <Copyright>nextstarproject</Copyright>
+        <PackageIcon>Resource\favicon.png</PackageIcon>
+        <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,6 +19,13 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.1.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Resource\favicon.png">
+        <Pack>True</Pack>
+        <PackagePath>/</PackagePath>
+      </None>
     </ItemGroup>
 
 </Project>

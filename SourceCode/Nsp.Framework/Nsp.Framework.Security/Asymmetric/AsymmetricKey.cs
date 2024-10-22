@@ -1,6 +1,6 @@
 ﻿namespace Nsp.Framework.Security.Asymmetric;
 
-public class NspRsaKey
+public class AsymmetricKey
 {
     public string PublicKey { get; set; }
     public string PrivateKey { get; set; }
