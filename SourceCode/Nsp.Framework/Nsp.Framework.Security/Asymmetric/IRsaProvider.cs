@@ -12,6 +12,7 @@ public interface IRsaProvider
     string ExportXmlPublicAndPrivate(bool isIncludePrivate = true);
     AsymmetricKey ExportPublicAndPrivateToBase64();
     RSAParameters ExportParameters(bool includePrivateParameters = true);
+    RsaSecurityKey ExportSecurityKey(string? keyId);
     static IReadOnlyCollection<int> KeySizeCollection => new List<int>() {1024, 2048, 3072, 4096}.AsReadOnly();
 
     public static RSA Create(int size = 2048)

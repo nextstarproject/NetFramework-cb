@@ -3,10 +3,11 @@ using Nsp.Framework.Security.Asymmetric;
 
 namespace Nsp.Framework.Security.DigitalSignature;
 
-public class RsaSsaPssSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, ISignatureX509Algorithm
+public class RsaSsaPssSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, ISignatureX509Algorithm, ISigningCredentialsAlgorithm
 {
     public HashAlgorithmName HashAlgorithmNameSetting => HashAlgorithmName.SHA512;
     public RSASignaturePadding RSASignaturePaddingSetting => RSASignaturePadding.Pss;
+    public string SecurityAlgorithm => SecurityAlgorithms.RsaSsaPssSha512;
     
     public RsaSsaPssSha512Signature(int size = 2048) : base(size)
     {
@@ -113,5 +114,11 @@ public class RsaSsaPssSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, 
     {
         var certificate = ExportX509Certificate2(notBefore, notAfter, distinguishedName);
         return certificate.Export(X509ContentType.Cert);
+    }
+    
+    public SigningCredentials ExportSigningCredentials(string? keyId)
+    {
+        var securityKey = ExportSecurityKey(keyId);
+        return new SigningCredentials(securityKey, SecurityAlgorithm);
     }
 }

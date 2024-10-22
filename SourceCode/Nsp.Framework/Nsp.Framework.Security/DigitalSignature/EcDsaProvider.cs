@@ -63,4 +63,12 @@ public class EcDsaProvider : IEcDsaProvider
     {
         return _ecDsa.ExportParameters(isIncludePrivateKey);
     }
+    
+    public ECDsaSecurityKey ExportSecurityKey(string? keyId)
+    {
+        return new ECDsaSecurityKey(_ecDsa)
+        {
+            KeyId = keyId ?? Guid.NewGuid().ToString()
+        };
+    }
 }

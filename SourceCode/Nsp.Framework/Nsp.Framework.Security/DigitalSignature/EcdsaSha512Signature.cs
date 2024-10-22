@@ -3,9 +3,10 @@ using Nsp.Framework.Security.Asymmetric;
 
 namespace Nsp.Framework.Security.DigitalSignature;
 
-public class EcdsaSha512Signature : EcDsaProvider, IEcdsaShaSignature
+public class EcdsaSha512Signature : EcDsaProvider, IEcdsaShaSignature, ISigningCredentialsAlgorithm
 {
     public HashAlgorithmName HashAlgorithmNameSetting => HashAlgorithmName.SHA512;
+    public string SecurityAlgorithm => SecurityAlgorithms.EcdsaSha512;
     
     public EcdsaSha512Signature() : base(ECCurve.NamedCurves.nistP521)
     {
@@ -67,5 +68,11 @@ public class EcdsaSha512Signature : EcDsaProvider, IEcdsaShaSignature
     public bool VerifySignature(byte[] plainBytes, byte[] signatureBytes)
     {
         return _ecDsa.VerifyData(plainBytes, signatureBytes, HashAlgorithmNameSetting);
+    }
+    
+    public SigningCredentials ExportSigningCredentials(string? keyId)
+    {
+        var securityKey = ExportSecurityKey(keyId);
+        return new SigningCredentials(securityKey, SecurityAlgorithm);
     }
 }

@@ -113,6 +113,14 @@ public class RsaProvider : IRsaProvider, IDisposable
         return _rsa.ExportParameters(includePrivateParameters);
     }
 
+    public RsaSecurityKey ExportSecurityKey(string? keyId)
+    {
+        return new RsaSecurityKey(_rsa)
+        {
+            KeyId = keyId ?? Guid.NewGuid().ToString()
+        };
+    }
+
     public void Dispose()
     {
         _rsa?.Dispose();
