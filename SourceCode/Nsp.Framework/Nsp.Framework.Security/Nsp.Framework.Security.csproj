@@ -25,6 +25,7 @@ sverification and signing.</Description>
       <None Update="Resource\favicon.png">
         <Pack>True</Pack>
         <PackagePath>/</PackagePath>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 

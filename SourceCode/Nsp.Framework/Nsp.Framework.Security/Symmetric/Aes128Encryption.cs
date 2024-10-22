@@ -8,14 +8,10 @@ public class Aes128Encryption : IAesEncryption
     public int KeyBitSize => 128;
     public int KeyByteSize => KeyBitSize / 8;
     
+    public int IvByteSize => 16;
+    
     public byte[] AesKey => _aesKey;
     public byte[] AesIv => _aesIv;
-    public string AesKeyString => Encoding.UTF8.GetString(_aesKey);
-    public string AesKeyHex => SecurityUtil.BytesToHexString(_aesKey);
-    public string AesKeyBase64 => Convert.ToBase64String(_aesKey);
-    public string AesIvString => Encoding.UTF8.GetString(_aesIv);
-    public string AesIvHex => SecurityUtil.BytesToHexString(_aesIv);
-    public string AesIvBase64 => Convert.ToBase64String(_aesIv);
 
     private readonly byte[] _aesKey;
     private readonly byte[] _aesIv;
@@ -25,15 +21,15 @@ public class Aes128Encryption : IAesEncryption
         if (key.Length != KeyByteSize)
             throw new ArgumentException($"Key must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(key));
         _aesKey = key;
-        _aesIv = RandomStringUtil.CreateRandomKey(KeyByteSize);
+        _aesIv = RandomStringUtil.CreateRandomKey(IvByteSize);
     }
     
     public Aes128Encryption(byte[] key, byte[] iv)
     {
         if (key.Length != KeyByteSize)
             throw new ArgumentException($"Key must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(key));
-        if (iv.Length != KeyByteSize)
-            throw new ArgumentException($"IV must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(iv));
+        if (iv.Length != IvByteSize)
+            throw new ArgumentException($"IV must be {IvByteSize * 8} bits ({IvByteSize} bytes).", nameof(iv));
 
         _aesKey = key;
         _aesIv = iv;
@@ -46,7 +42,7 @@ public class Aes128Encryption : IAesEncryption
     public Aes128Encryption(string key)
     {
         _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);
-        _aesIv = RandomStringUtil.CreateRandomKey(KeyByteSize);
+        _aesIv = RandomStringUtil.CreateRandomKey(IvByteSize);
     }
 
     /// <summary>
@@ -57,7 +53,7 @@ public class Aes128Encryption : IAesEncryption
     public Aes128Encryption(string key, string iv)
     {
         _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);
-        _aesIv = SecurityUtil.GetBytes(iv, KeyByteSize);
+        _aesIv = SecurityUtil.GetBytes(iv, IvByteSize);
     }
     
     public string Encrypt(string plainText)

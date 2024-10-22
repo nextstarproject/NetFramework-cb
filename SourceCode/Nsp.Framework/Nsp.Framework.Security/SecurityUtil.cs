@@ -32,29 +32,16 @@ public static class SecurityUtil
         return bytes;
     }
     
-    /// <summary>
-    /// 获取指定长度的字节数组, 不足部分用 0 填充, 超出部分截断
-    /// </summary>
-    /// <param name="input"></param>
-    /// <param name="length"></param>
-    /// <returns></returns>
     public static byte[] GetBytes(string input, int length)
     {
-        byte[] bytes = Encoding.UTF8.GetBytes(input);
-
-        if (bytes.Length < length)
+        using var sha256 = SHA256.Create();
+        var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+        
+        while (hash.Length < length)
         {
-            Array.Resize(ref bytes, length);
-            for (int i = bytes.Length; i < length; i++)
-            {
-                bytes[i] = 0; // 用 0 字符填充
-            }
-        }
-        else if (bytes.Length > length)
-        {
-            Array.Resize(ref bytes, length); // 截断多余部分
+            hash = hash.Concat(hash).ToArray();
         }
 
-        return bytes;
+        return hash.Take(length).ToArray();
     }
 }

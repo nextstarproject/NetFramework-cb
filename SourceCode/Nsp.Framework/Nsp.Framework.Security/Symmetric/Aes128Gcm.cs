@@ -8,9 +8,6 @@ public class Aes128Gcm : IAesGcm
     public int KeyByteSize => KeyBitSize / 8;
     
     public byte[] AesKey => _aesKey;
-    public string AesKeyString => Encoding.UTF8.GetString(_aesKey);
-    public string AesKeyHex => SecurityUtil.BytesToHexString(_aesKey);
-    public string AesKeyBase64 => Convert.ToBase64String(_aesKey);
     
     public int NonceByteSize => 96 / 8; // 96-bit nonce for GCM
     public int TagByteSize => 128 / 8;   // 128-bit authentication tag
@@ -77,7 +74,7 @@ public class Aes128Gcm : IAesGcm
     
     public byte[] Encrypt(byte[] plainBytes)
     {
-        using (var aesGcm = new AesGcm(_aesKey, TagByteSize * 8))
+        using (var aesGcm = new AesGcm(_aesKey, TagByteSize))
         {
             var nonce = new byte[NonceByteSize];
             RandomNumberGenerator.Fill(nonce); // 随机生成 nonce
@@ -100,7 +97,7 @@ public class Aes128Gcm : IAesGcm
 
     public byte[] Decrypt(byte[] cipherBytes)
     {
-        using (var aesGcm = new AesGcm(_aesKey, TagByteSize * 8))
+        using (var aesGcm = new AesGcm(_aesKey, TagByteSize))
         {
             // 提取 nonce, ciphertext, 和 tag
             var nonce = new byte[NonceByteSize];

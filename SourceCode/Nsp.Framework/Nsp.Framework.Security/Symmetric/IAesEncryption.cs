@@ -10,13 +10,8 @@ public interface IAesEncryption : ISymmetricAlgorithm
     /// Aes 字节大小
     /// </summary>
     public int KeyByteSize { get; }
+    public int IvByteSize { get; }
     public byte[] AesKey { get; }
     public byte[] AesIv { get; }
-    public string AesKeyString { get; }
-    public string AesKeyHex { get; }
-    public string AesKeyBase64 { get; }
-    public string AesIvString { get; }
-    public string AesIvHex { get; }
-    public string AesIvBase64 { get; }
     
 }

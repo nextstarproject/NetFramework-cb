@@ -9,14 +9,9 @@ public class Aes128CbcHmacSha256 : IAesCbcHmacSha
     public int KeyByteSize => KeyBitSize / 8;
     public int HmacKeyBitSize => 256;
     public int HmacKeyByteSize => HmacKeyBitSize / 8;
+    
     public byte[] AesKey => _aesKey;
     public byte[] HmacKey => _hmacKey;
-    public string AesKeyString => Encoding.UTF8.GetString(_aesKey);
-    public string AesKeyHex => SecurityUtil.BytesToHexString(_aesKey);
-    public string AesKeyBase64 => Convert.ToBase64String(_aesKey);
-    public string HmacKeyString => Encoding.UTF8.GetString(_hmacKey);
-    public string HmacKeyHex => SecurityUtil.BytesToHexString(_hmacKey);
-    public string HmacKeyBase64 => Convert.ToBase64String(_hmacKey);
     
     private readonly byte[] _aesKey;
     private readonly byte[] _hmacKey;
