@@ -25,6 +25,13 @@ public interface ISignatureX509Algorithm : ISignatureAlgorithm
     byte[] ExportPfxData(string password, DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,
         string distinguishedName = "CN=NSP");
 
+    /// <summary>
+    /// 这个只返回公钥Cert数据
+    /// </summary>
+    /// <param name="notBefore"></param>
+    /// <param name="notAfter"></param>
+    /// <param name="distinguishedName"></param>
+    /// <returns></returns>
     byte[] ExportCerData(DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,
         string distinguishedName = "CN=NSP");
 }

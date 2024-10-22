@@ -35,6 +35,26 @@ public class RsaProvider : IRsaProvider, IDisposable
         rsa.ImportParameters(rsaParameters);
         _rsa = rsa;
     }
+    
+    public RsaProvider(X509Certificate2 certificate2)
+    {
+        var rsaPrivateKey = certificate2.GetRSAPrivateKey();
+
+        // 提取公钥
+        var rsaPublicKey = certificate2.GetRSAPublicKey();
+
+        var rsa = RSA.Create();
+        if (rsaPublicKey != null)
+        {
+            rsa.ImportParameters(rsaPublicKey.ExportParameters(false));
+        }
+        
+        if (rsaPrivateKey != null)
+        {
+            rsa.ImportParameters(rsaPrivateKey.ExportParameters(true));
+        }
+        _rsa = rsa;
+    }
 
     public RsaProvider(string base64PrivateKey, string base64PublicKey)
     {

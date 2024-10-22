@@ -20,6 +20,10 @@ public class RsaSha256Signature : RsaProvider, IRsaShaSignatureAlgorithm, ISigna
     {
     }
     
+    public RsaSha256Signature(X509Certificate2 certificate) : base(certificate)
+    {
+    }
+    
     public RsaSha256Signature(string base64PrivateKey, string base64PublicKey) : base(base64PrivateKey, base64PublicKey)
     {
     }

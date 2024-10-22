@@ -19,6 +19,10 @@ public class RsaSha384Signature : RsaProvider, IRsaShaSignatureAlgorithm, ISigna
     public RsaSha384Signature(RSAParameters rsaParameters) : base(rsaParameters)
     {
     }
+    
+    public RsaSha384Signature(X509Certificate2 certificate) : base(certificate)
+    {
+    }
 
     public RsaSha384Signature(string base64PrivateKey, string base64PublicKey) : base(base64PrivateKey, base64PublicKey)
     {

@@ -18,8 +18,12 @@ public class RsaSsaPssShaSignatureTest
         var rsa2 = new RsaSsaPssSha256Signature(privateKey, publicKey);
         var verify1 = rsa2.VerifySignatureFromHex(text, encrypt1);
         var verify2 = rsa2.VerifySignatureFromBase64(text, encrypt2);
+        
+        var encrypt3 = rsa2.GenerateSignatureToHex(text);
+        var verify3 = rsa2.VerifySignatureFromHex(text, encrypt3);
         Assert.IsTrue(verify1);
         Assert.IsTrue(verify2);
+        Assert.IsTrue(verify3);
     }
     
     [TestMethod]
@@ -34,8 +38,32 @@ public class RsaSsaPssShaSignatureTest
         var rsa2 = new RsaSsaPssSha256Signature(parameters);
         var verify1 = rsa2.VerifySignatureFromHex(text, encrypt1);
         var verify2 = rsa2.VerifySignatureFromBase64(text, encrypt2);
+       
+        var encrypt3 = rsa2.GenerateSignatureToHex(text);
+        var verify3 = rsa2.VerifySignatureFromHex(text, encrypt3);
         Assert.IsTrue(verify1);
         Assert.IsTrue(verify2);
+        Assert.IsTrue(verify3);
+    }
+    
+    [TestMethod]
+    public void RsaSsaPssSha256SignatureX509Certificate2Test()
+    {
+        var rsa = new RsaSsaPssSha256Signature();
+        var text = "RsaSsaPssSha256Signature";
+        var encrypt1 = rsa.GenerateSignatureToHex(text);
+        var encrypt2 = rsa.GenerateSignatureToBase64(text);
+        var certificate2 = rsa.ExportX509Certificate2();
+        
+        var rsa2 = new RsaSsaPssSha256Signature(certificate2);
+        var verify1 = rsa2.VerifySignatureFromHex(text, encrypt1);
+        var verify2 = rsa2.VerifySignatureFromBase64(text, encrypt2);
+        
+        var encrypt3 = rsa2.GenerateSignatureToHex(text);
+        var verify3 = rsa2.VerifySignatureFromHex(text, encrypt3);
+        Assert.IsTrue(verify1);
+        Assert.IsTrue(verify2);
+        Assert.IsTrue(verify3);
     }
     
     [TestMethod]
@@ -51,8 +79,12 @@ public class RsaSsaPssShaSignatureTest
         var rsa2 = new RsaSsaPssSha384Signature(privateKey, publicKey);
         var verify1 = rsa2.VerifySignatureFromHex(text, encrypt1);
         var verify2 = rsa2.VerifySignatureFromBase64(text, encrypt2);
+        
+        var encrypt3 = rsa2.GenerateSignatureToHex(text);
+        var verify3 = rsa2.VerifySignatureFromHex(text, encrypt3);
         Assert.IsTrue(verify1);
         Assert.IsTrue(verify2);
+        Assert.IsTrue(verify3);
     }
     
     [TestMethod]
@@ -67,8 +99,32 @@ public class RsaSsaPssShaSignatureTest
         var rsa2 = new RsaSsaPssSha384Signature(parameters);
         var verify1 = rsa2.VerifySignatureFromHex(text, encrypt1);
         var verify2 = rsa2.VerifySignatureFromBase64(text, encrypt2);
+        
+        var encrypt3 = rsa2.GenerateSignatureToHex(text);
+        var verify3 = rsa2.VerifySignatureFromHex(text, encrypt3);
         Assert.IsTrue(verify1);
         Assert.IsTrue(verify2);
+        Assert.IsTrue(verify3);
+    }
+    
+    [TestMethod]
+    public void RsaSsaPssSha384SignatureX509Certificate2Test()
+    {
+        var rsa = new RsaSsaPssSha384Signature();
+        var text = "RsaSsaPssSha384Signature";
+        var encrypt1 = rsa.GenerateSignatureToHex(text);
+        var encrypt2 = rsa.GenerateSignatureToBase64(text);
+        var certificate2 = rsa.ExportX509Certificate2();
+        
+        var rsa2 = new RsaSsaPssSha384Signature(certificate2);
+        var verify1 = rsa2.VerifySignatureFromHex(text, encrypt1);
+        var verify2 = rsa2.VerifySignatureFromBase64(text, encrypt2);
+        
+        var encrypt3 = rsa2.GenerateSignatureToHex(text);
+        var verify3 = rsa2.VerifySignatureFromHex(text, encrypt3);
+        Assert.IsTrue(verify1);
+        Assert.IsTrue(verify2);
+        Assert.IsTrue(verify3);
     }
     
     [TestMethod]
@@ -84,8 +140,12 @@ public class RsaSsaPssShaSignatureTest
         var rsa2 = new RsaSsaPssSha512Signature(privateKey, publicKey);
         var verify1 = rsa2.VerifySignatureFromHex(text, encrypt1);
         var verify2 = rsa2.VerifySignatureFromBase64(text, encrypt2);
+        
+        var encrypt3 = rsa2.GenerateSignatureToHex(text);
+        var verify3 = rsa2.VerifySignatureFromHex(text, encrypt3);
         Assert.IsTrue(verify1);
         Assert.IsTrue(verify2);
+        Assert.IsTrue(verify3);
     }
     
     [TestMethod]
@@ -100,7 +160,31 @@ public class RsaSsaPssShaSignatureTest
         var rsa2 = new RsaSsaPssSha512Signature(parameters);
         var verify1 = rsa2.VerifySignatureFromHex(text, encrypt1);
         var verify2 = rsa2.VerifySignatureFromBase64(text, encrypt2);
+        
+        var encrypt3 = rsa2.GenerateSignatureToHex(text);
+        var verify3 = rsa2.VerifySignatureFromHex(text, encrypt3);
         Assert.IsTrue(verify1);
         Assert.IsTrue(verify2);
+        Assert.IsTrue(verify3);
+    }
+    
+    [TestMethod]
+    public void RsaSsaPssSha512SignatureX509Certificate2Test()
+    {
+        var rsa = new RsaSsaPssSha512Signature();
+        var text = "RsaSsaPssSha512Signature";
+        var encrypt1 = rsa.GenerateSignatureToHex(text);
+        var encrypt2 = rsa.GenerateSignatureToBase64(text);
+        var certificate2 = rsa.ExportX509Certificate2();
+        
+        var rsa2 = new RsaSsaPssSha512Signature(certificate2);
+        var verify1 = rsa2.VerifySignatureFromHex(text, encrypt1);
+        var verify2 = rsa2.VerifySignatureFromBase64(text, encrypt2);
+        
+        var encrypt3 = rsa2.GenerateSignatureToHex(text);
+        var verify3 = rsa2.VerifySignatureFromHex(text, encrypt3);
+        Assert.IsTrue(verify1);
+        Assert.IsTrue(verify2);
+        Assert.IsTrue(verify3);
     }
 }

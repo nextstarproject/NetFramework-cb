@@ -19,11 +19,15 @@ public class RsaSsaPssSha384Signature : RsaProvider, IRsaShaSignatureAlgorithm, 
     public RsaSsaPssSha384Signature(RSAParameters rsaParameters) : base(rsaParameters)
     {
     }
+    
+    public RsaSsaPssSha384Signature(X509Certificate2 certificate) : base(certificate)
+    {
+    }
 
     public RsaSsaPssSha384Signature(string base64PrivateKey, string base64PublicKey) : base(base64PrivateKey, base64PublicKey)
     {
     }
-
+    
     public string GenerateSignature(string plainText)
     {
         var bytes = Encoding.UTF8.GetBytes(plainText);
