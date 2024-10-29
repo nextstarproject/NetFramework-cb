@@ -25,6 +25,10 @@ public class RsaSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, ISigna
     {
     }
     
+    public RsaSha512Signature(byte[] pfxData, string? password = "") : base(pfxData, password)
+    {
+    }
+    
     public RsaSha512Signature(string base64PrivateKey, string base64PublicKey) : base(base64PrivateKey, base64PublicKey)
     {
     }
@@ -102,11 +106,13 @@ public class RsaSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, ISigna
         return certificate;
     }
     
-    public byte[] ExportPfxData(string password, DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,
+    public byte[] ExportPfxData(string? password = "", DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,
         string distinguishedName = "CN=NSP")
     {
         var certificate = ExportX509Certificate2(notBefore, notAfter, distinguishedName);
-        return certificate.Export(X509ContentType.Pfx, password);
+        return string.IsNullOrWhiteSpace(password)
+            ? certificate.Export(X509ContentType.Pfx)
+            : certificate.Export(X509ContentType.Pfx, password);
     }
     
     public byte[] ExportCerData(DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,

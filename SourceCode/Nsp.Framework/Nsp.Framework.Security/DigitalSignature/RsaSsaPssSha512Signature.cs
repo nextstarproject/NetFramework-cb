@@ -3,12 +3,13 @@ using Nsp.Framework.Security.Asymmetric;
 
 namespace Nsp.Framework.Security.DigitalSignature;
 
-public class RsaSsaPssSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, ISignatureX509Algorithm, ISigningCredentialsAlgorithm
+public class RsaSsaPssSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, ISignatureX509Algorithm,
+    ISigningCredentialsAlgorithm
 {
     public HashAlgorithmName HashAlgorithmNameSetting => HashAlgorithmName.SHA512;
     public RSASignaturePadding RSASignaturePaddingSetting => RSASignaturePadding.Pss;
     public string SecurityAlgorithm => SecurityAlgorithms.RsaSsaPssSha512;
-    
+
     public RsaSsaPssSha512Signature(int size = 2048) : base(size)
     {
     }
@@ -16,16 +17,21 @@ public class RsaSsaPssSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, 
     public RsaSsaPssSha512Signature(string xmlPrivateAndPublic) : base(xmlPrivateAndPublic)
     {
     }
-    
+
     public RsaSsaPssSha512Signature(RSAParameters rsaParameters) : base(rsaParameters)
     {
     }
-    
+
     public RsaSsaPssSha512Signature(X509Certificate2 certificate) : base(certificate)
     {
     }
 
-    public RsaSsaPssSha512Signature(string base64PrivateKey, string base64PublicKey) : base(base64PrivateKey, base64PublicKey)
+    public RsaSsaPssSha512Signature(byte[] pfxData, string? password = "") : base(pfxData, password)
+    {
+    }
+
+    public RsaSsaPssSha512Signature(string base64PrivateKey, string base64PublicKey) : base(base64PrivateKey,
+        base64PublicKey)
     {
     }
 
@@ -101,21 +107,23 @@ public class RsaSsaPssSha512Signature : RsaProvider, IRsaShaSignatureAlgorithm, 
             certificateRequest.CreateSelfSigned(notBefore.Value, notAfter.Value);
         return certificate;
     }
-    
-    public byte[] ExportPfxData(string password, DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,
+
+    public byte[] ExportPfxData(string? password = "", DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,
         string distinguishedName = "CN=NSP")
     {
         var certificate = ExportX509Certificate2(notBefore, notAfter, distinguishedName);
-        return certificate.Export(X509ContentType.Pfx, password);
+        return string.IsNullOrWhiteSpace(password)
+            ? certificate.Export(X509ContentType.Pfx)
+            : certificate.Export(X509ContentType.Pfx, password);
     }
-    
+
     public byte[] ExportCerData(DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,
         string distinguishedName = "CN=NSP")
     {
         var certificate = ExportX509Certificate2(notBefore, notAfter, distinguishedName);
         return certificate.Export(X509ContentType.Cert);
     }
-    
+
     public SigningCredentials ExportSigningCredentials(string? keyId)
     {
         var securityKey = ExportSecurityKey(keyId);

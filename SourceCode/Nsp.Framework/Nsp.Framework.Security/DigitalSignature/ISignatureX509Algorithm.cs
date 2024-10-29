@@ -22,7 +22,7 @@ public interface ISignatureX509Algorithm : ISignatureAlgorithm
     /// <param name="distinguishedName">设置CN名称</param>
     /// <example>distinguishedName="CN=NSP"</example>
     /// <returns></returns>
-    byte[] ExportPfxData(string password, DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,
+    byte[] ExportPfxData(string? password = "", DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null,
         string distinguishedName = "CN=NSP");
 
     /// <summary>

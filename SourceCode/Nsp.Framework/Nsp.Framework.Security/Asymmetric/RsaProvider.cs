@@ -28,32 +28,29 @@ public class RsaProvider : IRsaProvider, IDisposable
         rsa.FromXmlString(xmlPrivateAndPublic);
         _rsa = rsa;
     }
-    
+
     public RsaProvider(RSAParameters rsaParameters)
     {
         var rsa = RSA.Create();
         rsa.ImportParameters(rsaParameters);
         _rsa = rsa;
     }
-    
+
     public RsaProvider(X509Certificate2 certificate2)
     {
+        // GetRSAPrivateKey 此方法中包含公钥
         var rsaPrivateKey = certificate2.GetRSAPrivateKey();
 
-        // 提取公钥
-        var rsaPublicKey = certificate2.GetRSAPublicKey();
+        _rsa = rsaPrivateKey ?? throw new ArgumentNullException(nameof(certificate2));
+    }
 
-        var rsa = RSA.Create();
-        if (rsaPublicKey != null)
-        {
-            rsa.ImportParameters(rsaPublicKey.ExportParameters(false));
-        }
-        
-        if (rsaPrivateKey != null)
-        {
-            rsa.ImportParameters(rsaPrivateKey.ExportParameters(true));
-        }
-        _rsa = rsa;
+    public RsaProvider(byte[] pfxData, string? password = "")
+    {
+        var certificate2 = new X509Certificate2(pfxData, password, X509KeyStorageFlags.Exportable);
+        // GetRSAPrivateKey 此方法中包含公钥
+        var rsaPrivateKey = certificate2.GetRSAPrivateKey();
+
+        _rsa = rsaPrivateKey ?? throw new ArgumentNullException(nameof(pfxData));
     }
 
     public RsaProvider(string base64PrivateKey, string base64PublicKey)
@@ -64,13 +61,13 @@ public class RsaProvider : IRsaProvider, IDisposable
             var publicKeyBytes = Convert.FromBase64String(base64PublicKey);
             rsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
         }
-        
+
         if (!string.IsNullOrWhiteSpace(base64PrivateKey))
         {
             var privateKeyBytes = Convert.FromBase64String(base64PrivateKey);
             rsa.ImportPkcs8PrivateKey(privateKeyBytes, out _);
         }
-        
+
         _rsa = rsa;
     }
 
@@ -107,7 +104,7 @@ public class RsaProvider : IRsaProvider, IDisposable
             PrivateKey = ExportPrivateToBase64()
         };
     }
-    
+
     public RSAParameters ExportParameters(bool includePrivateParameters = true)
     {
         return _rsa.ExportParameters(includePrivateParameters);
