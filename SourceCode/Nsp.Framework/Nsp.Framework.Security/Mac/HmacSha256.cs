@@ -13,7 +13,7 @@ public class HmacSha256 : IHmacShaAlgorithm
 
     public HmacSha256(byte[] key)
     {
-        _hmacKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
+        _hmacKey = key;
     }
 
     /// <summary>
@@ -22,7 +22,7 @@ public class HmacSha256 : IHmacShaAlgorithm
     /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
     public HmacSha256(string key)
     {
-        _hmacKey = SecurityUtil.GetBytes(key, KeyByteSize);
+        _hmacKey = Encoding.UTF8.GetBytes(key);
     }
 
     public string Encrypt(string plainText)
