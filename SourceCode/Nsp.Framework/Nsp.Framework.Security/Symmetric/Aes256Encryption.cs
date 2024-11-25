@@ -18,27 +18,20 @@ public class Aes256Encryption : IAesEncryption
 
     public Aes256Encryption(byte[] key)
     {
-        if (key.Length != KeyByteSize)
-            throw new ArgumentException($"Key must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(key));
-        _aesKey = key;
-        _aesIv = RandomStringUtil.CreateRandomKey(KeyByteSize);
+        _aesKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
+        _aesIv = RandomStringUtil.CreateRandomKey(IvByteSize);
     }
     
     public Aes256Encryption(byte[] key, byte[] iv)
     {
-        if (key.Length != KeyByteSize)
-            throw new ArgumentException($"Key must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(key));
-        if (iv.Length != IvByteSize)
-            throw new ArgumentException($"IV must be {IvByteSize * 8} bits ({IvByteSize} bytes).", nameof(iv));
-
-        _aesKey = key;
-        _aesIv = iv;
+        _aesKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
+        _aesIv = SecurityUtil.FillRepeatBytes(iv, IvByteSize);
     }
     
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则补0</param>
+    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
     public Aes256Encryption(string key)
     {
         _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);
@@ -48,8 +41,8 @@ public class Aes256Encryption : IAesEncryption
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则补0</param>
-    /// <param name="iv">如果转换后长度超过，则截断，不足则补0</param>
+    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
+    /// <param name="iv">如果转换后长度超过，则截断，不足则重复填充</param>
     public Aes256Encryption(string key, string iv)
     {
         _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);

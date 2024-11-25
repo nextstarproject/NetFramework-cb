@@ -16,15 +16,13 @@ public class Aes192Gcm : IAesGcm
     
     public Aes192Gcm(byte[] key)
     {
-        if (key.Length != KeyByteSize)
-            throw new ArgumentException($"Key must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(key));
-        _aesKey = key;
+        _aesKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
     }
     
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则补0</param>
+    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
     public Aes192Gcm(string key)
     {
         _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);

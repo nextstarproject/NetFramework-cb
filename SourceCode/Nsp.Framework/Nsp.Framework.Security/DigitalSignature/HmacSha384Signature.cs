@@ -14,7 +14,7 @@ public class HmacSha384Signature : HmacSha384, IHmacShaSignatureAlgorithm
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则补0</param>
+    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
     public HmacSha384Signature(string key) : base(key)
     {
     }

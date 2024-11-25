@@ -7,9 +7,9 @@ public class Aes128Encryption : IAesEncryption
 {
     public int KeyBitSize => 128;
     public int KeyByteSize => KeyBitSize / 8;
-    
+
     public int IvByteSize => 16;
-    
+
     public byte[] AesKey => _aesKey;
     public byte[] AesIv => _aesIv;
 
@@ -18,27 +18,20 @@ public class Aes128Encryption : IAesEncryption
 
     public Aes128Encryption(byte[] key)
     {
-        if (key.Length != KeyByteSize)
-            throw new ArgumentException($"Key must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(key));
-        _aesKey = key;
+        _aesKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
         _aesIv = RandomStringUtil.CreateRandomKey(IvByteSize);
     }
-    
+
     public Aes128Encryption(byte[] key, byte[] iv)
     {
-        if (key.Length != KeyByteSize)
-            throw new ArgumentException($"Key must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(key));
-        if (iv.Length != IvByteSize)
-            throw new ArgumentException($"IV must be {IvByteSize * 8} bits ({IvByteSize} bytes).", nameof(iv));
-
-        _aesKey = key;
-        _aesIv = iv;
+        _aesKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
+        _aesIv = SecurityUtil.FillRepeatBytes(iv, IvByteSize);
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则补0</param>
+    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
     public Aes128Encryption(string key)
     {
         _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);
@@ -48,21 +41,21 @@ public class Aes128Encryption : IAesEncryption
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则补0</param>
-    /// <param name="iv">如果转换后长度超过，则截断，不足则补0</param>
+    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
+    /// <param name="iv">如果转换后长度超过，则截断，不足则重复填充</param>
     public Aes128Encryption(string key, string iv)
     {
         _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);
         _aesIv = SecurityUtil.GetBytes(iv, IvByteSize);
     }
-    
+
     public string Encrypt(string plainText)
     {
         var plainBytes = Encoding.UTF8.GetBytes(plainText);
         var encryptedBytes = Encrypt(plainBytes);
         return Encoding.UTF8.GetString(encryptedBytes);
     }
-    
+
     public string Decrypt(string cipherText)
     {
         var cipherBytes = Encoding.UTF8.GetBytes(cipherText);
@@ -113,6 +106,7 @@ public class Aes128Encryption : IAesEncryption
                 {
                     csEncrypt.Write(plainBytes);
                 }
+
                 return msEncrypt.ToArray();
             }
         }

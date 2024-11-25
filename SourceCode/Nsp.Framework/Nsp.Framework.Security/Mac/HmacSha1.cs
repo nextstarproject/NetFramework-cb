@@ -2,16 +2,16 @@
 
 namespace Nsp.Framework.Security.Mac;
 
-public class HmacSha512 : IHmacShaAlgorithm
+public class HmacSha1 : IHmacShaAlgorithm
 {
-    public int KeyBitSize => 512;
+    public int KeyBitSize => 160;
     public int KeyByteSize => KeyBitSize / 8;
 
     public byte[] HmacKey => _hmacKey;
 
     private readonly byte[] _hmacKey;
 
-    public HmacSha512(byte[] key)
+    public HmacSha1(byte[] key)
     {
         _hmacKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
     }
@@ -20,7 +20,7 @@ public class HmacSha512 : IHmacShaAlgorithm
     /// 
     /// </summary>
     /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
-    public HmacSha512(string key)
+    public HmacSha1(string key)
     {
         _hmacKey = SecurityUtil.GetBytes(key, KeyByteSize);
     }
@@ -37,7 +37,7 @@ public class HmacSha512 : IHmacShaAlgorithm
         var hmacBytes = Encoding.UTF8.GetBytes(hmacText);
         return Compare(textBytes, hmacBytes);
     }
-    
+
     public string EncryptToHex(string plainText)
     {
         var bytes = Encoding.UTF8.GetBytes(plainText);
@@ -66,7 +66,7 @@ public class HmacSha512 : IHmacShaAlgorithm
 
     public byte[] Encrypt(byte[] plainBytes)
     {
-        using (var hmac = new HMACSHA256(_hmacKey))
+        using (var hmac = new HMACSHA1(_hmacKey))
         {
             var hash = hmac.ComputeHash(plainBytes);
             return hash;
@@ -78,28 +78,4 @@ public class HmacSha512 : IHmacShaAlgorithm
         var computedHmac = Encrypt(plainBytes);
         return computedHmac.SequenceEqual(hmacBytes);
     }
-
-    #region Private Method
-
-    private byte[] GetBytes(string input, int length, string paramName)
-    {
-        byte[] bytes = Encoding.UTF8.GetBytes(input);
-
-        if (bytes.Length < length)
-        {
-            Array.Resize(ref bytes, length);
-            for (int i = bytes.Length; i < length; i++)
-            {
-                bytes[i] = 0; // 用 0 字符填充
-            }
-        }
-        else if (bytes.Length > length)
-        {
-            Array.Resize(ref bytes, length); // 截断多余部分
-        }
-
-        return bytes;
-    }
-
-    #endregion
 }

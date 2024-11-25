@@ -4,13 +4,6 @@ namespace Nsp.Framework.Core;
 
 public static class RandomStringUtil
 {
-    public const string UrlSafeCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~";
-    public const string NumericCharacters = "0123456789";
-    public const string DistinguishableCharacters = "CDEHKMPRTUWXY012458";
-    public const string AsciiPrintableCharacters =
-        "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-    public const string AlphanumericCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
     private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
     private static readonly Random Random = new Random();
 
@@ -21,7 +14,7 @@ public static class RandomStringUtil
     /// <returns></returns>
     public static string UrlSafe(int len = 32)
     {
-        return new string(Enumerable.Repeat(UrlSafeCharacters, len)
+        return new string(Enumerable.Repeat(StringConst.UrlSafeCharacters, len)
             .Select(s => s[Random.Next(s.Length)]).ToArray());
     }
 
@@ -32,7 +25,7 @@ public static class RandomStringUtil
     /// <returns></returns>
     public static string Numeric(int len = 32)
     {
-        return new string(Enumerable.Repeat(NumericCharacters, len)
+        return new string(Enumerable.Repeat(StringConst.NumericCharacters, len)
             .Select(s => s[Random.Next(s.Length)]).ToArray());
     }
 
@@ -43,7 +36,7 @@ public static class RandomStringUtil
     /// <returns></returns>
     public static string Distinguishable(int len = 32)
     {
-        return new string(Enumerable.Repeat(DistinguishableCharacters, len)
+        return new string(Enumerable.Repeat(StringConst.DistinguishableCharacters, len)
             .Select(s => s[Random.Next(s.Length)]).ToArray());
     }
 
@@ -54,7 +47,7 @@ public static class RandomStringUtil
     /// <returns></returns>
     public static string AsciiPrintable(int len = 32)
     {
-        return new string(Enumerable.Repeat(AsciiPrintableCharacters, len)
+        return new string(Enumerable.Repeat(StringConst.AsciiPrintableCharacters, len)
             .Select(s => s[Random.Next(s.Length)]).ToArray());
     }
 
@@ -65,7 +58,7 @@ public static class RandomStringUtil
     /// <returns></returns>
     public static string Alphanumeric(int len = 32)
     {
-        return new string(Enumerable.Repeat(AlphanumericCharacters, len)
+        return new string(Enumerable.Repeat(StringConst.AlphanumericCharacters, len)
             .Select(s => s[Random.Next(s.Length)]).ToArray());
     }
 

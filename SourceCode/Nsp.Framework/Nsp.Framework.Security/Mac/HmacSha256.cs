@@ -13,15 +13,13 @@ public class HmacSha256 : IHmacShaAlgorithm
 
     public HmacSha256(byte[] key)
     {
-        if (key.Length != KeyByteSize)
-            throw new ArgumentException($"Key must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(key));
-        _hmacKey = key;
+        _hmacKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则补0</param>
+    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
     public HmacSha256(string key)
     {
         _hmacKey = SecurityUtil.GetBytes(key, KeyByteSize);

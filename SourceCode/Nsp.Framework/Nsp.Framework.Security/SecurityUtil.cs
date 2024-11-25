@@ -13,7 +13,7 @@ public static class SecurityUtil
     {
         return BitConverter.ToString(bytes).Replace("-", "").ToLowerInvariant();
     }
-    
+
     /// <summary>
     /// Hex 转 Bytes 字符串
     /// </summary>
@@ -29,19 +29,52 @@ public static class SecurityUtil
             // 将每两个十六进制字符转换为一个字节
             bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
         }
+
         return bytes;
     }
-    
+
     public static byte[] GetBytes(string input, int length)
     {
         using var sha256 = SHA256.Create();
         var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
-        
-        while (hash.Length < length)
+
+        if (hash.Length >= length) return hash[..length];
+
+        var result = new byte[length];
+        Buffer.BlockCopy(hash, 0, result, 0, hash.Length);
+
+        var offset = hash.Length;
+        while (offset < length)
         {
-            hash = hash.Concat(hash).ToArray();
+            var bytesToCopy = Math.Min(hash.Length, length - offset);
+            Buffer.BlockCopy(hash, 0, result, offset, bytesToCopy);
+            offset += bytesToCopy;
         }
 
-        return hash.Take(length).ToArray();
+        return result;
+    }
+
+    public static byte[] FillRepeatBytes(byte[] key, int length)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+        if (length < 0) throw new ArgumentOutOfRangeException(nameof(length), "Length cannot be negative.");
+
+        if (key.Length >= length) return key[..length];
+
+        var destinationKey = new byte[length];
+        Buffer.BlockCopy(key, 0, destinationKey, 0, key.Length);
+
+        var remaining = length - key.Length;
+        var numCopies = remaining / key.Length;
+        var remainder = remaining % key.Length;
+
+        for (var i = 0; i < numCopies; i++)
+        {
+            Buffer.BlockCopy(key, 0, destinationKey, key.Length + i * key.Length, key.Length);
+        }
+
+        Buffer.BlockCopy(key, 0, destinationKey, length - remainder, remainder);
+
+        return destinationKey;
     }
 }

@@ -18,27 +18,20 @@ public class Aes128CbcHmacSha256 : IAesCbcHmacSha
 
     public Aes128CbcHmacSha256(byte[] key)
     {
-        if (key.Length != KeyByteSize)
-            throw new ArgumentException($"Key must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(key));
-        _aesKey = key;
+        _aesKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);;
         _hmacKey = RandomStringUtil.CreateRandomKey(HmacKeyByteSize);
     }
     
     public Aes128CbcHmacSha256(byte[] aesKey, byte[] hmacKey)
     {
-        if (aesKey.Length != KeyByteSize)
-            throw new ArgumentException($"Key must be {KeyBitSize} bits ({KeyByteSize} bytes).", nameof(aesKey));
-        if (hmacKey.Length != KeyByteSize)
-            throw new ArgumentException($"Hmac key must be {HmacKeyBitSize} bits ({HmacKeyByteSize} bytes).", nameof(hmacKey));
-
-        _aesKey = aesKey;
-        _hmacKey = hmacKey;
+        _aesKey = SecurityUtil.FillRepeatBytes(aesKey, KeyByteSize);
+        _hmacKey = SecurityUtil.FillRepeatBytes(hmacKey, KeyByteSize);
     }
     
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="aesKey">如果转换后长度超过，则截断，不足则补0</param>
+    /// <param name="aesKey">如果转换后长度超过，则截断，不足则重复填充</param>
     public Aes128CbcHmacSha256(string aesKey)
     {
         _aesKey = SecurityUtil.GetBytes(aesKey, KeyByteSize);
@@ -48,8 +41,8 @@ public class Aes128CbcHmacSha256 : IAesCbcHmacSha
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="aesKey">如果转换后长度超过，则截断，不足则补0</param>
-    /// <param name="hmacKey">如果转换后长度超过，则截断，不足则补0</param>
+    /// <param name="aesKey">如果转换后长度超过，则截断，不足则重复填充</param>
+    /// <param name="hmacKey">如果转换后长度超过，则截断，不足则重复填充</param>
     public Aes128CbcHmacSha256(string aesKey, string hmacKey)
     {
         _aesKey = SecurityUtil.GetBytes(aesKey, KeyByteSize);

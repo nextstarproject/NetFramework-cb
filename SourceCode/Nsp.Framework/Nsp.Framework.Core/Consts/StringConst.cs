@@ -3,6 +3,32 @@
 public static class StringConst
 {
     /// <summary>
+    /// URL安全字符
+    /// </summary>
+    public const string UrlSafeCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~";
+    /// <summary>
+    /// 纯数字
+    /// </summary>
+    public const string NumericCharacters = "0123456789";
+    /// <summary>
+    /// 易分辨字符
+    /// </summary>
+    public const string DistinguishableCharacters = "CDEHKMPRTUWXY012458";
+    /// <summary>
+    /// Ascii字符
+    /// </summary>
+    public const string AsciiPrintableCharacters =
+        "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+    /// <summary>
+    /// 字母数字字符
+    /// </summary>
+    public const string AlphanumericCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    /// <summary>
+    /// Base32字符
+    /// </summary>
+    public const string Base32Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    
+    /// <summary>
     /// 省略号 <code>...</code>
     /// </summary>
     public const string Ellipsis = "...";
