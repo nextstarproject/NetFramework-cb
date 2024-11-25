@@ -1,9 +1,18 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography;
+using System.Text;
 
 namespace Nsp.Framework.Core;
 
 public class Base32Utils
 {
+    public static string GenerateRandom(int byteLength = 20)
+    {
+        using var rng = RandomNumberGenerator.Create();
+        var bytes = new byte[byteLength]; // 计算需要的字节数
+        rng.GetBytes(bytes);
+        return Encode(bytes);
+    }
+    
     public static string Encode(byte[] data)
     {
         var result = new StringBuilder();

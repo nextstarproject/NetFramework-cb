@@ -1,4 +1,5 @@
-﻿using Nsp.Framework.Security.Mac;
+﻿using Nsp.Framework.Core;
+using Nsp.Framework.Security.Mac;
 
 namespace Nsp.Framework.Security.Test.Mac;
 
@@ -20,6 +21,11 @@ public class HmacShaTest
         var encrypt2 = hmac2.EncryptToBase64(text);
         var compare2 = hmac.CompareFromBase64(text, encrypt2);
         Assert.IsTrue(compare2);
+
+        var hmac3 = new HmacSha1(RandomStringUtil.CreateRandomKey(15));
+        var encrypt3 = hmac3.EncryptToHex(text);
+        var compare3 = hmac3.CompareFromHex(text, encrypt3);
+        Assert.IsTrue(compare3);
     }
     
     [TestMethod]

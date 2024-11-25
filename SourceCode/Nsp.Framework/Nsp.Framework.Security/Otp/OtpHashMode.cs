@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Nsp.Framework.Security.Totp;
+namespace Nsp.Framework.Security.Otp;
 
 /// <summary>
 /// Indicates which HMAC hashing algorithm should be used
