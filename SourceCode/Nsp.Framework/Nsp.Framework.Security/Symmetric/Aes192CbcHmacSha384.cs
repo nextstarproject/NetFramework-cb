@@ -5,47 +5,53 @@ namespace Nsp.Framework.Security.Symmetric;
 
 public class Aes192CbcHmacSha384 : IAesCbcHmacSha
 {
-    public int KeyBitSize => 192;
-    public int KeyByteSize => KeyBitSize / 8;
-    public int HmacKeyBitSize => 384;
-    public int HmacKeyByteSize => HmacKeyBitSize / 8;
+    public static int KeyBitSize => 192;
+    public static int KeyByteSize => KeyBitSize / 8;
+    public static int HmacKeyBitSize => 384;
+    public static int HmacKeyByteSize => HmacKeyBitSize / 8;
+    
     public byte[] AesKey => _aesKey;
     public byte[] HmacKey => _hmacKey;
+    public string AesKeyBase64 => Convert.ToBase64String(_aesKey);
+    public string HmacKeyBase64 => Convert.ToBase64String(_hmacKey);
     
     private readonly byte[] _aesKey;
     private readonly byte[] _hmacKey;
 
+    public Aes192CbcHmacSha384()
+    {
+        _aesKey = RandomStringUtil.CreateRandomKey(KeyByteSize);
+        _hmacKey = RandomStringUtil.CreateRandomKey(HmacKeyByteSize);
+    }
+    
     public Aes192CbcHmacSha384(byte[] key)
     {
-        _aesKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);;
+        SecurityInvalidKeyException.ThrowIfInsufficient(key, KeyByteSize);
+        _aesKey = key;
         _hmacKey = RandomStringUtil.CreateRandomKey(HmacKeyByteSize);
     }
     
     public Aes192CbcHmacSha384(byte[] aesKey, byte[] hmacKey)
     {
-        _aesKey = SecurityUtil.FillRepeatBytes(aesKey, KeyByteSize);
-        _hmacKey = SecurityUtil.FillRepeatBytes(hmacKey, KeyByteSize);
+        SecurityInvalidKeyException.ThrowIfInsufficient(aesKey, KeyByteSize);
+        _aesKey = aesKey;
+        _hmacKey = hmacKey;
     }
     
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="aesKey">如果转换后长度超过，则截断，不足则重复填充</param>
-    public Aes192CbcHmacSha384(string aesKey)
+    public Aes192CbcHmacSha384(string aesKeyBase64)
     {
-        _aesKey = SecurityUtil.GetBytes(aesKey, KeyByteSize);
+        var aesKeyBytes = Convert.FromBase64String(aesKeyBase64);
+        SecurityInvalidKeyException.ThrowIfInsufficient(aesKeyBytes, KeyByteSize);
+        _aesKey = aesKeyBytes;
         _hmacKey = RandomStringUtil.CreateRandomKey(HmacKeyByteSize);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="aesKey">如果转换后长度超过，则截断，不足则重复填充</param>
-    /// <param name="hmacKey">如果转换后长度超过，则截断，不足则重复填充</param>
-    public Aes192CbcHmacSha384(string aesKey, string hmacKey)
+    public Aes192CbcHmacSha384(string aesKeyBase64, string hmacKeyBase64)
     {
-        _aesKey = SecurityUtil.GetBytes(aesKey, KeyByteSize);
-        _hmacKey = SecurityUtil.GetBytes(hmacKey, HmacKeyByteSize);
+        var aesKeyBytes = Convert.FromBase64String(aesKeyBase64);
+        SecurityInvalidKeyException.ThrowIfInsufficient(aesKeyBytes, KeyByteSize);
+        _aesKey = aesKeyBytes;
+        _hmacKey = Convert.FromBase64String(hmacKeyBase64);
     }
     
     public string Encrypt(string plainText)

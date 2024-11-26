@@ -32,8 +32,36 @@ public static class SecurityUtil
 
         return bytes;
     }
+    
+    /// <summary>
+    /// 将纯文本转为Base64
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
+    public static string EncodeToBase64(string text)
+    {
+        var textBytes = Encoding.UTF8.GetBytes(text);
+        return Convert.ToBase64String(textBytes);
+    }
 
-    public static byte[] GetBytes(string input, int length)
+    /// <summary>
+    /// 将Base64转为纯文本
+    /// </summary>
+    /// <param name="base64String"></param>
+    /// <returns></returns>
+    public static string DecodeFromBase64(string base64String)
+    {
+        var base64Bytes = Convert.FromBase64String(base64String);
+        return Encoding.UTF8.GetString(base64Bytes);
+    }
+
+    /// <summary>
+    /// 将字符串转为Byte[]，并且填充至指定长度
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="length"></param>
+    /// <returns></returns>
+    public static byte[] FillRepeatBytes(this string input, int length)
     {
         using var sha256 = SHA256.Create();
         var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
@@ -54,7 +82,14 @@ public static class SecurityUtil
         return result;
     }
 
-    public static byte[] FillRepeatBytes(byte[] key, int length)
+    /// <summary>
+    /// 填充至指定长度
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="length"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static byte[] FillRepeatBytes(this byte[] key, int length)
     {
         ArgumentNullException.ThrowIfNull(key);
         if (length < 0) throw new ArgumentOutOfRangeException(nameof(length), "Length cannot be negative.");

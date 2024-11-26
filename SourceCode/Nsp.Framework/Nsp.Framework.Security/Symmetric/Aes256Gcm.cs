@@ -1,40 +1,45 @@
 ﻿using System.Text;
+using Nsp.Framework.Core;
 
 namespace Nsp.Framework.Security.Symmetric;
 
 public class Aes256Gcm : IAesGcm
 {
-    public int KeyBitSize => 256;
-    public int KeyByteSize => KeyBitSize / 8;
-    
+    public static int KeyBitSize => 256;
+    public static int KeyByteSize => KeyBitSize / 8;
+    public static int NonceByteSize => 96 / 8; // 96-bit nonce for GCM
+    public static int TagByteSize => 128 / 8; // 128-bit authentication tag
+
     public byte[] AesKey => _aesKey;
-    
-    public int NonceByteSize => 96 / 8; // 96-bit nonce for GCM
-    public int TagByteSize => 128 / 8;   // 128-bit authentication tag
+    public string AesKeyBase64 => Convert.ToBase64String(_aesKey);
 
     private readonly byte[] _aesKey;
     
+    public Aes256Gcm()
+    {
+        _aesKey = RandomStringUtil.CreateRandomKey(KeyByteSize);
+    }
+
     public Aes256Gcm(byte[] key)
     {
-        _aesKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
+        SecurityInvalidKeyException.ThrowIfInsufficient(key, KeyByteSize);
+        _aesKey = key;
     }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
-    public Aes256Gcm(string key)
+
+    public Aes256Gcm(string keyBase64)
     {
-        _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);
+        var keyBytes = Convert.FromBase64String(keyBase64);
+        SecurityInvalidKeyException.ThrowIfInsufficient(keyBytes, KeyByteSize);
+        _aesKey = keyBytes;
     }
-    
+
     public string Encrypt(string plainText)
     {
         var plainBytes = Encoding.UTF8.GetBytes(plainText);
         var encryptedBytes = Encrypt(plainBytes);
         return Encoding.UTF8.GetString(encryptedBytes);
     }
-    
+
     public string Decrypt(string cipherText)
     {
         var cipherBytes = Encoding.UTF8.GetBytes(cipherText);
@@ -69,7 +74,7 @@ public class Aes256Gcm : IAesGcm
         var decryptedBytes = Decrypt(cipherBytes);
         return Encoding.UTF8.GetString(decryptedBytes);
     }
-    
+
     public byte[] Encrypt(byte[] plainBytes)
     {
         using (var aesGcm = new AesGcm(_aesKey, TagByteSize))

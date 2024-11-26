@@ -1,31 +1,36 @@
 ﻿using System.Text;
+using Nsp.Framework.Core;
 
 namespace Nsp.Framework.Security.Symmetric;
 
 public class Aes128Gcm : IAesGcm
 {
-    public int KeyBitSize => 128;
-    public int KeyByteSize => KeyBitSize / 8;
+    public static int KeyBitSize => 128;
+    public static int KeyByteSize => KeyBitSize / 8;
+    public static int NonceByteSize => 96 / 8; // 96-bit nonce for GCM
+    public static int TagByteSize => 128 / 8;   // 128-bit authentication tag
     
     public byte[] AesKey => _aesKey;
-    
-    public int NonceByteSize => 96 / 8; // 96-bit nonce for GCM
-    public int TagByteSize => 128 / 8;   // 128-bit authentication tag
+    public string AesKeyBase64 => Convert.ToBase64String(_aesKey);
 
     private readonly byte[] _aesKey;
+
+    public Aes128Gcm()
+    {
+        _aesKey = RandomStringUtil.CreateRandomKey(KeyByteSize);
+    }
     
     public Aes128Gcm(byte[] key)
     {
-        _aesKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
+        SecurityInvalidKeyException.ThrowIfInsufficient(key, KeyByteSize);
+        _aesKey = key;
     }
     
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
-    public Aes128Gcm(string key)
+    public Aes128Gcm(string keyBase64)
     {
-        _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);
+        var keyBytes = Convert.FromBase64String(keyBase64);
+        SecurityInvalidKeyException.ThrowIfInsufficient(keyBytes, KeyByteSize);
+        _aesKey = keyBytes;
     }
     
     public string Encrypt(string plainText)

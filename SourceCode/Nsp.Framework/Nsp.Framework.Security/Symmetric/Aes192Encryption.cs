@@ -5,48 +5,56 @@ namespace Nsp.Framework.Security.Symmetric;
 
 public class Aes192Encryption : IAesEncryption
 {
-    public int KeyBitSize => 192;
-    public int KeyByteSize => KeyBitSize / 8;
+    public static int KeyBitSize => 192;
+    public static int KeyByteSize => KeyBitSize / 8;
 
-    public int IvByteSize => 16;
+    public static int IvByteSize => 16;
     
     public byte[] AesKey => _aesKey;
     public byte[] AesIv => _aesIv;
+    public string AesKeyBase64 => Convert.ToBase64String(_aesKey);
+    public string AesIvBase64 => Convert.ToBase64String(_aesIv);
 
     private readonly byte[] _aesKey;
     private readonly byte[] _aesIv;
+    
+    public Aes192Encryption()
+    {
+        _aesKey = RandomStringUtil.CreateRandomKey(KeyByteSize);
+        _aesIv = RandomStringUtil.CreateRandomKey(IvByteSize);
+    }
 
     public Aes192Encryption(byte[] key)
     {
-        _aesKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
+        SecurityInvalidKeyException.ThrowIfInsufficient(key, KeyByteSize);
+        _aesKey = key;
         _aesIv = RandomStringUtil.CreateRandomKey(IvByteSize);
     }
     
     public Aes192Encryption(byte[] key, byte[] iv)
     {
-        _aesKey = SecurityUtil.FillRepeatBytes(key, KeyByteSize);
-        _aesIv = SecurityUtil.FillRepeatBytes(iv, IvByteSize);
+        SecurityInvalidKeyException.ThrowIfInsufficient(key, KeyByteSize);
+        SecurityInvalidKeyException.ThrowIfInsufficient(iv, IvByteSize);
+        _aesKey = key;
+        _aesIv = iv;
     }
     
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
-    public Aes192Encryption(string key)
+    public Aes192Encryption(string keyBase64)
     {
-        _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);
+        var keyBytes = Convert.FromBase64String(keyBase64);
+        SecurityInvalidKeyException.ThrowIfInsufficient(keyBytes, KeyByteSize);
+        _aesKey = keyBytes;
         _aesIv = RandomStringUtil.CreateRandomKey(IvByteSize);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
-    /// <param name="iv">如果转换后长度超过，则截断，不足则重复填充</param>
-    public Aes192Encryption(string key, string iv)
+    public Aes192Encryption(string keyBase64, string ivBase64)
     {
-        _aesKey = SecurityUtil.GetBytes(key, KeyByteSize);
-        _aesIv = SecurityUtil.GetBytes(iv, IvByteSize);
+        var keyBytes = Convert.FromBase64String(keyBase64);
+        SecurityInvalidKeyException.ThrowIfInsufficient(keyBytes, KeyByteSize);
+        var ivBytes = Convert.FromBase64String(ivBase64);
+        SecurityInvalidKeyException.ThrowIfInsufficient(ivBytes, IvByteSize);
+        _aesKey = keyBytes;
+        _aesIv = ivBytes;
     }
     
     public string Encrypt(string plainText)

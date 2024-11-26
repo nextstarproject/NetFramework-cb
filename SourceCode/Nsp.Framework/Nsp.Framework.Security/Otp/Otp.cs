@@ -16,7 +16,7 @@ internal class Otp
     /// <summary>
     /// The hash mode to use
     /// </summary>
-    protected readonly OtpHashMode HashMode;
+    protected OtpHashMode HashMode { get; init; } = OtpHashMode.Sha1;
 
     /// <summary>
     /// 步长
@@ -33,16 +33,14 @@ internal class Otp
     /// </summary>
     protected VerificationWindow VerificationWindow { get; init; } = VerificationWindow.RfcSpecifiedNetworkDelay;
 
-    private IHmacShaAlgorithm HmacShaAlgorithm => CreateHmacHash(HashMode);
-
     #region Constructor
 
     public Otp(byte[] secretKeyBytes)
     {
-        SecretKeyBytes = SecurityUtil.FillRepeatBytes(secretKeyBytes, 20);
+        SecretKeyBytes = secretKeyBytes;
     }
 
-    public Otp(string secretKey) : this(Base32Utils.Decode(secretKey))
+    public Otp(string secretKey) : this(Base32Utils.ToBytes(secretKey))
     {
     }
 
@@ -62,13 +60,15 @@ internal class Otp
         VerifyParameters(Step, OtpSize);
     }
 
-    public Otp(string secretKey, OtpHashMode hashMode = OtpHashMode.Sha1, int step = 30, int otpSize = 6) : this(secretKey, hashMode, step)
+    public Otp(string secretKey, OtpHashMode hashMode = OtpHashMode.Sha1, int step = 30, int otpSize = 6) : this(
+        secretKey, hashMode, step)
     {
         OtpSize = otpSize;
         VerifyParameters(Step, OtpSize);
     }
 
-    public Otp(string secretKey, OtpHashMode hashMode = OtpHashMode.Sha1, int step = 30, int otpSize = 6, VerificationWindow? verificationWindow = null) :
+    public Otp(string secretKey, OtpHashMode hashMode = OtpHashMode.Sha1, int step = 30, int otpSize = 6,
+        VerificationWindow? verificationWindow = null) :
         this(secretKey, hashMode, step, otpSize)
     {
         VerificationWindow = verificationWindow ?? VerificationWindow.RfcSpecifiedNetworkDelay;
@@ -77,15 +77,23 @@ internal class Otp
 
     #endregion
 
-    public long GenerateCode(DateTimeOffset? dateTimeOffset = null)
+    public static string GenerateSecretKey(int byteLength = 20)
+    {
+        if (byteLength is not (16 or 20))
+            throw new ArgumentOutOfRangeException(nameof(byteLength));
+        return Base32Utils.GenerateRandom(byteLength);
+    }
+    
+    public string GenerateCode(DateTimeOffset? dateTimeOffset = null)
     {
         var time = (dateTimeOffset ?? DateTimeOffset.UtcNow).ToUnixTimeSeconds();
         var timeStepCounter = time / Step;
-        
-        return GenerateCodeFromCounter(timeStepCounter);
+
+        var code = GenerateCodeFromCounter(timeStepCounter);
+        return code;
     }
 
-    public bool VerifyCode(long code, DateTimeOffset? dateTimeOffset = null)
+    public bool VerifyCode(string code, DateTimeOffset? dateTimeOffset = null)
     {
         var currentDateTimeOffset = dateTimeOffset ?? DateTimeOffset.UtcNow;
         var time = currentDateTimeOffset.ToUnixTimeSeconds();
@@ -98,24 +106,27 @@ internal class Otp
         });
     }
 
-    public long GenerateCodeFromCounter(long timeStepCounter)
+
+    #region Private Method
+
+    private string GenerateCodeFromCounter(long timeStepCounter)
     {
-        var hash = HmacShaAlgorithm.Encrypt(BitConverter.GetBytes(timeStepCounter));
+        var counter = BitConverter.GetBytes(timeStepCounter);
+        if (BitConverter.IsLittleEndian)
+        {
+            Array.Reverse(counter);
+        }
+
+        var hash = ComputeHmacHash(HashMode, counter);
 
         // 从哈希值中截取验证码
-        long offset = hash[^1] & 0xf;
-        long truncatedHash = (hash[offset] & 0x7f) << 24 | (hash[offset + 1] & 0xff) << 16 | (hash[offset + 2] & 0xff) << 8 | (hash[offset + 3] & 0xff);
-        var code = truncatedHash % (long)Math.Pow(10, OtpSize);
-        return code;
+        long offset = hash[^1] & 0x0F;
+        long truncatedHash = (hash[offset] & 0x7f) << 24 | (hash[offset + 1] & 0xff) << 16 |
+                             (hash[offset + 2] & 0xff) << 8 | (hash[offset + 3] & 0xff);
+        var code = truncatedHash % (long) Math.Pow(10, OtpSize);
+        return code.ToString("D" + OtpSize);
     }
-
-    public static string GenerateSecretKey(int byteLength = 20)
-    {
-        if (byteLength is not (16 or 20))
-            throw new ArgumentOutOfRangeException(nameof(byteLength));
-        return Base32Utils.GenerateRandom(byteLength);
-    }
-
+    
     private static void VerifyParameters(int step, int otpSize)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(step);
@@ -127,13 +138,15 @@ internal class Otp
     /// <summary>
     /// Create an HMAC object for the specified algorithm
     /// </summary>
-    private IHmacShaAlgorithm CreateHmacHash(OtpHashMode otpHashMode)
+    private byte[] ComputeHmacHash(OtpHashMode otpHashMode, byte[] counterBytes)
     {
         return otpHashMode switch
         {
-            OtpHashMode.Sha256 => new HmacSha256(SecretKeyBytes),
-            OtpHashMode.Sha512 => new HmacSha512(SecretKeyBytes),
-            _ => new HmacSha1(SecretKeyBytes)
+            OtpHashMode.Sha256 => new HmacSha256(SecretKeyBytes).Encrypt(counterBytes),
+            OtpHashMode.Sha512 => new HmacSha512(SecretKeyBytes).Encrypt(counterBytes),
+            _ => new HmacSha1(SecretKeyBytes).Encrypt(counterBytes),
         };
     }
+    
+    #endregion
 }
