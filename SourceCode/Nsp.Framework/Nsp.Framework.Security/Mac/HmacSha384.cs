@@ -15,11 +15,7 @@ public class HmacSha384 : IHmacShaAlgorithm
     {
         _hmacKey = key;
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="key">如果转换后长度超过，则截断，不足则重复填充</param>
+    
     public HmacSha384(string key)
     {
         _hmacKey = Encoding.UTF8.GetBytes(key);
