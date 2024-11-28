@@ -74,28 +74,4 @@ public class HmacSha384 : IHmacShaAlgorithm
         var computedHmac = Encrypt(plainBytes);
         return computedHmac.SequenceEqual(hmacBytes);
     }
-
-    #region Private Method
-
-    private byte[] GetBytes(string input, int length, string paramName)
-    {
-        byte[] bytes = Encoding.UTF8.GetBytes(input);
-
-        if (bytes.Length < length)
-        {
-            Array.Resize(ref bytes, length);
-            for (int i = bytes.Length; i < length; i++)
-            {
-                bytes[i] = 0; // 用 0 字符填充
-            }
-        }
-        else if (bytes.Length > length)
-        {
-            Array.Resize(ref bytes, length); // 截断多余部分
-        }
-
-        return bytes;
-    }
-
-    #endregion
 }
